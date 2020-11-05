@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+    <title>David O'Donohue | Fly Game</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#603cba">
+    <meta name="theme-color" content="#ffffff">
+    
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { padding: 0; margin: 0; background: #fff; display: block; margin: 0; border: 0; }
+    </style>
+</head>
+<body>
+</body>
+
+<script>
+
+var canvas = document.createElement("canvas");
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeight;
+document.getElementsByTagName("body")[0].appendChild(canvas);
+var ctx = canvas.getContext("2d");
+
+var time = 0;
+
+var score = 0;
+var highscore = getCookie("highscore");
+
+if (highscore == ""){
+    highscore = 0;
+}
+else{
+    highscore = parseInt(highscore);
+}
+
+
+
+var hoops = [];
+var hoop_radius = 5;
+
+var player_radius = 5;
+var player_width = 40;
+var player_offset = 20;
+
+function randBetween(min, max){
+    return Math.floor(Math.random() * (max-min) + min);
+}
+
+function normalRand(min, max){
+    var sum = 0;
+    for (i = 0; i < (max-min); i++){
+        sum += Math.random();
+    }
+    return Math.floor(sum) + min;
+}
+
+function positiveRand(min, max){ // random number with a positive skew
+    sum = min;
+    for (var roll = randBetween(0, 100); roll > 20 && sum < max; roll = randBetween(min, max)){
+        sum += 1;
+    }
+    return Math.min(sum, max);
+}
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+class Hoop {
+    constructor(){
+        this.coordX = canvas.width; 
+        this.coordY = randBetween(0,canvas.height - 2*hoop_radius);
+        this.height = normalRand(0,canvas.height-this.coordY);
+        this.width = positiveRand(10, canvas.width);
+    }
+    
+    update(){
+        this.coordX -= Math.round(time/1000) + 1;
+        if (this.coordX + this.width <= 0){
+            hoops.shift();
+        }
+    }
+}
+
+function addHoop(){
+    var clear = true;
+     for (index in hoops){
+        if (hoops[index].coordX + hoops[index].width > canvas.width){
+            clear = false;
+            break;
+       }
+    }
+
+    roll = randBetween(0,1000);
+    if (roll > 990 && clear){
+        var h = new Hoop();
+        hoops.push(h);
+    }
+}
+
+class Player {
+    constructor(){
+        this.altitude = (canvas.height-player_radius)/2;
+        this.lift = 0;
+    }
+    gravity(){
+        if (this.lift > -20){
+            this.lift -= 2;
+        }
+    }
+    
+    jump(){
+        if (this.lift <5){
+            this.lift = 8;
+        }
+        else if (this.lift <20){
+            this.lift += 3
+        }
+    }
+    
+    update(){
+        if (spacePressed){
+            this.jump();
+        }
+        this.gravity();
+        this.altitude -= this.lift/5;
+        
+        if (this.altitude - player_radius < 0){
+            this.altitude = player_radius;
+        }
+        else if (this.altitude > (canvas.height-player_radius)){
+            this.altitude = canvas.height-player_radius;
+        }
+        
+        for (index in hoops){
+            if (hoops[index].coordX <= (player_width + player_offset) && hoops[index].coordX + hoops[index].width >= player_offset){
+            
+                if ((Math.abs(this.altitude - hoops[index].coordY) < (player_radius + hoop_radius)) || (Math.abs(this.altitude - (hoops[index].coordY + hoops[index].height)) < (player_radius + hoop_radius))){
+                    collide();
+                    break;
+                }
+            }
+        }
+        for (index in hoops){
+            if (hoops[index].coordX <= (player_width + player_offset) && hoops[index].coordX + hoops[index].width >= (player_offset) && player.altitude > hoops[index].coordY && player.altitude < hoops[index].coordY + hoops[index].height){
+                score += (Math.round(time/1000) + 1)**2;
+            }
+        }
+    }
+}
+
+function collide(){
+    alert("Collision!");
+    if (score > highscore){
+        highscore = score;
+    }
+    score = 0;
+    player = new Player();
+    hoops = [];
+    time = 0;
+    spacePressed = false;
+    document.cookie = "highscore="+highscore.toString(10)+"; expires=Fri, 01 Jan 2100 00:00:00 GMT";
+}
+
+
+var spacePressed = false;
+
+var player = new Player();
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("touchstart", handleStart, false);
+document.addEventListener("touchend", handleEnd, false);
+
+var paused = false;
+
+function handleStart(e){
+    spacePressed = true;
+}
+
+function handleEnd(e){
+    spacePressed = false;
+}
+
+function keyDownHandler(e) {
+    if(e.key == " ") {
+        spacePressed = true;
+    }
+    else if(e.key == 'p'){
+        paused = paused ^ true;
+    }
+}
+
+function keyUpHandler(e) {
+    if(e.key == " ") {
+        spacePressed = false;
+    }
+}
+
+function drawSprites(){
+    for (index in hoops){
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.fillRect(hoops[index].coordX,hoops[index].coordY-hoop_radius,hoops[index].width,2*hoop_radius);
+        ctx.fillRect(hoops[index].coordX,hoops[index].coordY+hoops[index].height-hoop_radius,hoops[index].width,2*hoop_radius);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "rgb(145, 255, 195)";
+        ctx.fillRect(hoops[index].coordX, hoops[index].coordY + hoop_radius, hoops[index].width,hoops[index].height - 2*hoop_radius);
+        ctx.closePath();
+    }
+    ctx.beginPath();
+    ctx.rect(player_offset,player.altitude-player_radius,player_width, 2*player_radius);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: "+score, 10, 20);
+    ctx.fillText("Your highcore: "+highscore, 10, 40);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawScore();
+    player.update();
+    if (paused == false){
+        for (index in hoops){
+            hoops[index].update();
+        }
+    }
+    addHoop();
+    drawSprites();
+    requestAnimationFrame(draw);
+    time += 1;
+}
+
+draw();
+
+</script>
+
+</html>

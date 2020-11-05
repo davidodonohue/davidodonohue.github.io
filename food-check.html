@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>David O'Donohue | Food Check</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+        <link rel="manifest" href="./site.webmanifest">
+        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="./components/FoodItem.js"></script>
+        <script src="./components/SavedFood.js"></script>
+        <link href="./assets/css/all.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id ='app'>
+            <food-item class="dataEntry" @save="save"></food-item>
+            <hr v-if="savedFood.length > 0">
+            Sort food by: <select v-model="sortBy">
+                <option>Percent protein</option>
+                <option>Cost of protein</option>
+                <option>Caloric density</option>
+              </select>
+
+            <div>
+                <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem.data" :index="index" @remove="remove" :hr="index != savedFood.length -1"></saved-food>    
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+
+app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                savedFood: [],
+                sortBy: null
+            }
+        },
+        methods: {
+            save(data){
+                this.savedFood.push({
+                    data: data
+                });
+                this.sortList();
+                this.updateStorage();
+            },
+            remove(index){
+                this.savedFood.splice(index, 1);
+                this.sortList();
+                this.updateStorage();
+            },
+            updateStorage(){
+                localStorage.savedFood = JSON.stringify(this.savedFood);
+                localStorage.sortBy = this.sortBy;
+            },
+            sortList() {
+                if (this.sortBy == 'Percent protein'){
+                        this.savedFood.sort(function(a,b){
+                            return b.data.proteinratio - a.data.proteinratio;
+                        });
+                    } else if (this.sortBy == 'Cost of protein'){
+                        this.savedFood.sort(function(a,b){
+                            return a.data.costOfProtein - b.data.costOfProtein;
+                        });
+                    } else if (this.sortBy == 'Caloric density') {
+                        this.savedFood.sort(function(a,b){
+                            return a.data.calories - b.data.calories;
+                        });
+                    }
+            }
+        },
+        mounted() {
+            if (localStorage.savedFood){
+                this.savedFood = JSON.parse(localStorage.savedFood);
+            }
+            if (localStorage.sortBy){
+                this.sortBy = localStorage.sortBy;
+            }
+        },
+        watch: {
+            sortBy: function(val){
+                this.sortList();
+                this.updateStorage();
+            }
+        }
+    });
+
+</script>
+
+<style>
+
+    :root {
+        --primary: #bb86fc;
+        --primary-variant: #3700b3;
+        --secondary: #03dac6;
+        --background00: #121212;
+        --background01: #1d1d1d;
+        --background02: #212121;
+        --background03: #242424;
+        --background04: #272727;
+        --background06: #2c2c2c;
+        --background08: #2d2d2d;
+        --background12: #323232;
+        --background16: #353535;
+        --background24: #383838;
+        --error: #cf6679;
+        --text: #eee;
+    }
+
+    body {
+        background-color: var(--background00);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: x-large;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .dataEntry {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .savedFood {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        word-break: break-word;
+    }
+
+    hr {
+        border: 2px solid var(--background24);
+        border-radius: 2px;
+        margin-left: 0;
+        margin-right: 0;
+        border-color: var(--secondary);
+    }
+
+    input {
+        padding: 15px;
+        box-sizing: border-box;
+        background-color: var(--background01);
+        color: var(--text);
+        font-weight: bold;
+        margin: 1px;
+    }
+
+    select, option {
+        padding: 15px;
+        box-sizing: border-box;
+        background-color: var(--background01);
+        color: var(--text);
+        font-weight: bold;
+        margin: 1px;
+    }
+    
+    button.remove {
+        background-color: var(--error);
+        border: none;
+        color: var(--background00);
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 10px;
+        margin: 10px;
+        transition-duration: 0.4s;
+        max-height: 50px;
+    }
+    
+    button.save {
+        background-color: var(--primary);
+        border: none;
+        color: var(--background00);
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 10px;
+        margin: 10px;
+        transition-duration: 0.4s;
+    }
+
+    button.selectedOrder{
+        background-color: var(--primary-variant);
+        color: var(--text);
+    }
+
+    button.save:hover {
+        background-color: var(--primary-variant);
+        color: var(--text);
+    }
+
+    @keyframes animation {
+        from {
+            filter: blur(5px);
+            opacity: 0;
+        } to {
+            filter: blur(0px);
+            opacity: 1;
+        }
+    }
+
+    .savedFood, .foodItem, hr {
+        animation: animation 1.4s ease-in-out 1 normal;
+    }
+
+    @media only screen and (min-width: 990px) {
+        
+    }
+
+    .component-fade {
+        opacity: 1;
+        filter: blur(0px);
+    }
+
+    .component-fade-enter-active, .component-fade-leave-active {
+        transition: all 1s ease;
+    }
+    .component-fade-enter, .component-fade-leave-to {
+        opacity: 0;
+        filter: blur(5px);
+    }
+
+    /* Extra small devices (phones, 600px and down)
+    @media only screen and (max-width: 600px) {
+
+    }
+
+    /* Small devices (portrait tablets and large phones, 600px and up) 
+    @media only screen and (min-width: 600px) {
+
+    }
+
+    /* Medium devices (landscape tablets, 768px and up)
+    @media only screen and (min-width: 768px) {
+
+    }
+
+    /* Large devices (laptops/desktops, 992px and up)
+    @media only screen and (min-width: 992px) {
+
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) 
+    @media only screen and (min-width: 1200px) {
+
+    }*/
+    
+</style>

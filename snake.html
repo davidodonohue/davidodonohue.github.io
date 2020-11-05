@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+    <title>David O'Donohue | Snake Bot</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="500" height="500"></canvas>
+
+<script>
+
+function randBetween(min, max){
+    return Math.floor(Math.random() * (max-min) + min);
+}
+
+function myClone(obj){
+    return JSON.parse(JSON.stringify(obj));
+}
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+var moves = ["ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"];
+
+function restart(){
+    player = [[0,25]];
+    appleExists = false;
+    delete apple;
+    facing = "ArrowRight";
+}
+
+var player = [[0,25]];
+var appleExists = false;
+var apple;
+
+var botPlay = true;
+
+var box = 10;
+var range = canvas.height/box;
+
+var facing = "ArrowRight";
+var directions = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"];
+
+document.addEventListener("keydown", keydown, false);
+
+function keydown(e){
+    if (!botPlay){
+        if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "ArrowLeft" || e.key == "ArrowRight"){
+            facing = e.key;
+        }
+    }
+}
+
+function heuristic(sq1, sq2){
+    var val = Math.abs(sq1[0]-sq2[0])+ Math.abs(sq1[1]-sq2[1]);
+    return val;
+}
+
+class Node {
+    constructor(player, cost){
+        this.heuristic = heuristic(player[player.length-1], apple);
+        this.cost = cost;
+        this.total = cost + this.heuristic;
+        this.player = player;
+    }
+}
+
+function compareCells(cell1, cell2){
+    for (index in cell1){
+        if (cell1[index] != cell2[index]){
+            return false;
+        }
+    }
+    return true;
+}
+
+function expand(queue, best){
+    var move = best[1];
+    for (index in moves){
+        var newState = updatePlayer(best[0].player,moves[index]);
+        if (!collision(newState)){
+            var node = new Node(newState, best[0].cost + 1);
+            queue[queue.length] = [node,move];
+        }
+    }
+}
+
+function botMove(){
+    var queue = []; // queue of (Node, move)
+    for (index in moves){
+        var expansion = updatePlayer(player, moves[index]);
+        if (!collision(expansion)){
+            queue[queue.length] = [new Node(expansion, 1),moves[index]]; // Initialise the queue
+        }
+    }
+    while (queue.length > 0){ // continue until a solution is found
+        var best = queue[0]; // pick an arbitrary element for comparison
+        for (i in queue){
+            if (queue[i][0].total < best[0].total){ // find the best element in the queue
+                best = queue[i];
+
+            }
+        }
+        queue = queue.filter(function(value, index, arr){return !compareCells(best[0], value[0])}); // remove the best element from the queue
+        if (best[0].heuristic == 0){
+            return best[1]  // if the apple has been reached, return the move
+        }
+        else{
+            expand(queue, best);
+        }
+        console.log(best[0].heuristic); // TODO: this is not decreasing. Check that the queue is being handled properly (best is actually removed from queue)
+    }
+}
+
+function createApple(){
+    x = randBetween(0,range-1);
+    y = randBetween(0,range-1);
+    apple = [x,y];
+    appleExists = true;
+}
+
+function updatePlayer(playerparam, dir){
+    p = myClone(playerparam);
+    var coords = p[p.length -1];
+    var next;
+    if (dir == "ArrowRight"){
+        next = [(coords[0]+1)%range,coords[1]]
+        p[p.length] = next;
+    }
+    else if (dir == "ArrowLeft"){
+        next = [(coords[0]+range-1)%range,coords[1]];
+        p[p.length] = next;
+    }
+    else if (dir == "ArrowUp"){
+        next = [coords[0],(coords[1] +range-1)%range];
+        p[p.length] = next;
+    }
+    else if (dir == "ArrowDown"){
+        next = [coords[0],(coords[1]+1)%range];
+        p[p.length] = next;
+    }
+    return p;
+}
+
+function maybeBite(){
+    if (player[player.length-1][0] == apple[0] && player[player.length-1][1] == apple[1]){
+        appleExists = false;
+        delete apple;
+    }
+    else {
+        player.shift();
+    }
+}
+
+function drawPlayer(){
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    for (index in player){
+        ctx.fillRect(player[index][0]*box, player[index][1]*box, box, box);
+    }
+    ctx.closePath();
+}
+
+function drawApple(){
+    ctx.beginPath();
+    ctx.fillStyle = "lime";
+    ctx.fillRect(apple[0]*box, apple[1]*box, box, box);
+}
+
+function collision(playerparam){
+    var head = playerparam[playerparam.length-1];
+    for (index in playerparam){
+        if (playerparam[index][0] == head[0] && playerparam[index][1] == head[1]){
+            if (index == playerparam.length-1){
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+}
+
+function pathLength (playerparam, target){
+    if (playerparam[playerparam.length-1][0] == target[0] && playerparam[playerparam.length-1][1] == target[1]){
+        return 0;
+    }
+    else if (collision(playerparam)){
+        return 2*(canvas.width*canvas.height);
+    }
+    else{
+        return Math.min(pathLength(updatePlayer(playerparam, "ArrowUp"), apple) + 1,
+                        pathLength(updatePlayer(playerparam, "ArrowDown"), apple) + 1,
+                        pathLength(updatePlayer(playerparam, "ArrowLeft"), apple) + 1,
+                        pathLength(updatePlayer(playerparam, "ArrowRight"), apple) + 1);
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!appleExists){
+        createApple();
+    }
+    drawApple();
+    console.log("Here");
+    if (botPlay){
+        player = updatePlayer(player, botMove());
+    }
+    else{
+        player = updatePlayer(player, facing);
+    }
+    maybeBite();
+    if (collision(player)){
+        alert("Collision!")
+        restart();
+    }
+    drawPlayer();
+    
+}
+
+
+setInterval(draw,5000);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>DAWR PoC</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      .form-control {
+        margin:0.5rem;
+      }
+    </style>
+  </head>
+  
+  <body class="bg-light">
+    <!-- As a link -->
+    <nav class="navbar" style="background-color:#272c33">
+      <a class="navbar-brand" href="#" style="background-color:#272c33">
+        <img src="img/logo.png">
+      </a>
+    </nav>
+    
+    <div class="container">
+      <div class="py-5 text-center">
+          <h2>DAWR PoC</h2>
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="First name" id="firstname">
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Last name" id="lastname">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Phone" id="phone">
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Email" id="email">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <select class="form-control browser-default custom-select" id="declaration">
+                  <option selected>Declaration type</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+            </div>
+            <div class="col">
+                <select class="form-control browser-default custom-select" id="port">
+                  <option selected>Port of arrival</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+                <label for="exampleFormControlFile1">Upload attachments</label>
+                <input type="file" class="form-control-file" id="attachment" style="margin:0.5rem;" onchange="load()">
+            </div>
+          </div>
+          <button type="submit" onclick="send()" class="btn btn-dark btn-lg btn-block" value="Submit" id="submit">Submit</button>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+    var reader = new FileReader();
+    var filename;
+    function load() {
+      document.getElementById("submit").disabled = true;
+      var file = document.getElementById("attachment").files[0]
+      reader.readAsDataURL(file);
+      reader.addEventListener("load", function () {
+        // enable the submit button when the file has been loaded
+        filename = file.name;
+        document.getElementById("submit").disabled = false;
+      });
+    }
+    function send() {
+        document.getElementById("submit").disabled = true;
+        var packet = new XMLHttpRequest();
+        packet.open("POST","https://prod-11.australiasoutheast.logic.azure.com:443/workflows/90ee87082e12446786b97782d913f0b3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VFN-wzBr-W0okv47qF4ZxRo82CfMGq4MUWLZ19-su64")
+        packet.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        var dec = document.getElementById("declaration");
+        var por = document.getElementById("port");
+        var item = {
+            firstname: document.getElementById("firstname").value,
+            lastname: document.getElementById("lastname").value,
+            phone: document.getElementById("phone").value,
+            email : document.getElementById("email").value,
+            declaration: dec.options[dec.selectedIndex].text,
+            port: por.options[por.selectedIndex].text,
+            file_data: reader.result,
+            file_name: filename
+        };
+        packet.send(JSON.stringify(item));
+        document.getElementById("firstname").value = "";
+        document.getElementById("lastname").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("attachment").files[0] = null;
+
+        var elements = document.getElementsByTagName('select');
+        for (var i = 0; i < elements.length; i++)
+        {
+            elements[i].selectedIndex = 0;
+        }
+        alert("Thank you for your submission!");
+    }
+    </script>
+  
+  </body>
+</html>

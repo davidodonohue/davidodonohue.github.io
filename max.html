@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>David O'Donohue | Max</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id = 'root'>
+Weight:<input type="text" v-model="weight" placeholder="Weight"></input><br>
+Reps:<input type="text" v-model="reps" placeholder="Reps"></input><br>
+<p>
+Epley: {{ epley }}<br>
+Brzycki: {{ brzycki }}<br>
+McGlothlin: {{ mcglothlin }}<br>
+Lombardi: {{ lombardi }}<br>
+Mayhew: {{mayhew }}<br>
+O'Conner: {{ oconner }}<br>
+Wathen: {{ wathen }}<br>
+</p>
+</div>
+</html>
+
+
+<script>
+    app = new Vue({
+        el: '#root',
+        data: {
+            weight: 0,
+            reps: 0
+        },
+        computed:{
+            epley: function() {
+                return (this.weight && this.reps) ? Math.round(this.weight * (1 + (this.reps/30))) : 0;
+            },
+            brzycki: function() {
+                return (this.weight && this.reps) ? Math.round(this.weight * (36 / (37 - this.reps))) : 0;
+            },
+            mcglothlin: function() {
+                return (this.weight && this.reps) ? Math.round(100 * this.weight / (101.3 - 2.67123 * this.reps)) : 0;
+            },
+            lombardi: function() {
+                return (this.weight && this.reps) ? Math.round(this.weight * this.reps ** 0.1) : 0;
+            },
+            mayhew: function() {
+                return (this.weight && this.reps) ? Math.round(100 * this.weight / (52.2 + 41.9 * Math.E ** (-0.055 * this.reps))) : 0;
+            },
+            oconner: function() {
+                return (this.weight && this.reps) ? Math.round(this.weight * (1 + (this.reps / 40))) : 0;
+            },
+            wathen: function() {
+                return (this.weight && this.reps) ? Math.round(100 * this.weight / (48.8 + 53.8 * Math.E ** (-0.075 * this.reps))) : 0;
+            }
+    }
+})</script>
