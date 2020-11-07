@@ -17,7 +17,16 @@
     </head>
     <body>
         <div id ='app'>
-            <food-item class="dataEntry" @save="save"></food-item>
+            <input type='text' ref='input' v-model='inputData.name' placeholder='Food name' class='mobileBlock' @keydown.enter="save"/>
+            <input type='number' v-model='inputData.carbs' placeholder='Carbs per 100g' class='mobileBlock' @keydown.enter="save"/>
+            <input type='number' v-model='inputData.protein' placeholder='Protein per 100g' class='mobileBlock' @keydown.enter="save"/>
+            <input type='number' v-model='inputData.fat' placeholder='Fat per 100g' class='mobileBlock' @keydown.enter="save"/>
+            <input type='number' v-model='inputData.cost' placeholder='Cost per item' class='mobileBlock' @keydown.enter="save"/>
+            <input type='number' v-model='inputData.gramSize' placeholder='Grams per item' class='mobileBlock' @keydown.enter="save"/>
+        <p class='mobileBlock'>Percent protein: {{ Math.round(proteinratio) }}<br>
+        Calories per 100g: {{ Math.round(calories) }}<br>
+        Cost per 100g of protein: {{parseFloat(costOfProtein).toFixed(2)}}</p>
+        <button @click="save" class='save'><i class="far fa-save"></i> Save Item</button>
             <hr v-if="savedFood.length > 0">
             Sort food by: <select v-model="sortBy">
                 <option>Percent protein</option>
@@ -26,7 +35,7 @@
               </select>
 
             <div>
-                <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem.data" :index="index" @remove="remove" :hr="index != savedFood.length -1"></saved-food>    
+                <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" :hr="index != savedFood.length -1"></saved-food>    
             </div>
         </div>
     </body>
@@ -39,14 +48,32 @@ app = new Vue({
         data () {
             return {
                 savedFood: [],
-                sortBy: null
+                sortBy: null,
+                inputData: {
+                    carbs: null,
+                    protein: null,
+                    fat: null,
+                    name: null,
+                    cost: null,
+                    gramSize: null
+                }
             }
         },
         methods: {
-            save(data){
+            save(){
                 this.savedFood.push({
-                    data: data
-                });
+                    name: this.inputData.name, 
+                    carbs: this.inputData.carbs,
+                    protein: this.inputData.protein,
+                    fat: this.inputData.fat,
+                    proteinratio: this.proteinratio,
+                    calories: this.calories,
+                    cost: this.inputData.cost,
+                    gramSize: this.inputData.gramSize,
+                    costOfProtein: this.costOfProtein,
+                    proteinPerItem: this.proteinPerItem,
+                    caloriesPerItem: this.caloriesPerItem
+            });
                 this.sortList();
                 this.updateStorage();
             },
@@ -54,6 +81,9 @@ app = new Vue({
                 this.savedFood.splice(index, 1);
                 this.sortList();
                 this.updateStorage();
+            },
+            edit(data){
+                this.inputData = {...this.inputData, ...data}
             },
             updateStorage(){
                 localStorage.savedFood = JSON.stringify(this.savedFood);
@@ -81,6 +111,35 @@ app = new Vue({
             }
             if (localStorage.sortBy){
                 this.sortBy = localStorage.sortBy;
+            }
+        },
+        computed: {
+            proteinratio: function() {
+                return (this.inputData.carbs && this.inputData.protein && this.inputData.fat) ? Math.round(this.inputData.protein * 400 / (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)) : 0;
+            },
+            calories: function() {
+                return (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)
+            },
+            costOfProtein: function() {
+                if (this.inputData.cost && this.inputData.gramSize){
+                    return ((this.inputData.cost * 10000) / (this.inputData.gramSize * this.inputData.protein));
+                } else {
+                    return 0;
+                }
+            },
+            proteinPerItem: function(){
+                if (this.inputData.protein && this.inputData.gramSize){
+                    return (this.inputData.protein * (this.inputData.gramSize / 100))
+                } else {
+                    return 0;
+                }
+            },
+            caloriesPerItem: function(){
+                if (this.inputData.gramSize){
+                    return ((this.calories * this.inputData.gramSize) / 100); 
+                } else {
+                    return 0;
+                }
             }
         },
         watch: {
@@ -190,6 +249,20 @@ app = new Vue({
         transition-duration: 0.4s;
     }
 
+    button.edit {
+        background-color: var(--secondary);
+        border: none;
+        color: var(--background00);
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 10px;
+        margin: 10px;
+        transition-duration: 0.4s;
+        max-height: 50px;
+    }
+
     button.selectedOrder{
         background-color: var(--primary-variant);
         color: var(--text);
@@ -211,7 +284,7 @@ app = new Vue({
     }
 
     .savedFood, .foodItem, hr {
-        animation: animation 1.4s ease-in-out 1 normal;
+        animation: animation 1s ease-in-out 1 normal;
     }
 
     @media only screen and (min-width: 990px) {

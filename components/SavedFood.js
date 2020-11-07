@@ -3,10 +3,11 @@ const SavedFood = Vue.component('saved-food', {
     methods: {
         remove() {
             this.$emit('remove', this.index);
+        },
+        edit() {
+            this.$emit('edit', this.data);
+            this.remove();
         }
-    },
-    computed: {
-
     },
     template: `<div>
 <p style="flex-grow:2">{{ data.name }}</br>
@@ -17,6 +18,7 @@ const SavedFood = Vue.component('saved-food', {
 {{parseFloat(this.data.proteinPerItem).toFixed(2)}} grams of protein per item</br>
 {{Math.round(this.data.caloriesPerItem)}} calories per item</br>
 <button @click="remove" class='remove'><i class="fas fa-ban"></i> Remove</button>
+<button @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button>
 <hr v-if="hr" style="width: 100%;">
     </div>`
 });

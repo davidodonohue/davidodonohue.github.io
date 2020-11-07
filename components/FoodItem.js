@@ -1,75 +1,84 @@
 const FoodItem = Vue.component('food-item', {
     data () {
         return {
-            carbs: null,
-            protein: null,
-            fat: null,
-            name: null,
-            cost: null,
-            gramSize: null
+            inputData: {
+                carbs: null,
+                protein: null,
+                fat: null,
+                name: null,
+                cost: null,
+                gramSize: null
+            }
+        }
+    },
+    mounted: {
+        if (editData){
+            this.inputData = Object.assign({}, editData);
+            console.log("editdata: ", editData)
+            this.$refs.inputData.focus();
         }
     },
     computed: {
         proteinratio: function() {
-            return (this.carbs && this.protein && this.fat) ? Math.round(this.protein * 400 / (this.carbs * 4 + this.protein * 4 + this.fat * 4)) : 0;
+            return (this.inputData.carbs && this.inputData.protein && this.inputData.fat) ? Math.round(this.inputData.protein * 400 / (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)) : 0;
         },
         calories: function() {
-            return (this.carbs * 4 + this.protein * 4 + this.fat * 4)
+            return (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)
         },
         costOfProtein: function() {
-            if (this.cost && this.gramSize){
-                return ((this.cost * 10000) / (this.gramSize * this.protein));
+            if (this.inputData.cost && this.inputData.gramSize){
+                return ((this.inputData.cost * 10000) / (this.inputData.gramSize * this.inputData.protein));
             } else {
                 return 0;
             }
         },
         proteinPerItem: function(){
-            if (this.protein && this.gramSize){
-                return (this.protein * (this.gramSize / 100))
+            if (this.inputData.protein && this.inputData.gramSize){
+                return (this.inputData.protein * (this.inputData.gramSize / 100))
             } else {
                 return 0;
             }
         },
         caloriesPerItem: function(){
-            if (this.gramSize){
-                return ((this.calories * this.gramSize) / 100); 
+            if (this.inputData.gramSize){
+                return ((this.calories * this.inputData.gramSize) / 100); 
             } else {
                 return 0;
             }
         }
     },
-    props: ['index'],
+    props: ['index', 'editData'],
     methods: {
         save() {
             this.$emit('save', {
-                name:this.name, 
-                carbs: this.carbs,
-                protein: this.protein,
-                fat: this.fat,
+                name:this.inputData.name, 
+                carbs: this.inputData.carbs,
+                protein: this.inputData.protein,
+                fat: this.inputData.fat,
                 proteinratio: this.proteinratio,
                 calories: this.calories,
-                cost: this.cost,
-                gramSize: this.gramSize,
+                cost: this.inputData.cost,
+                gramSize: this.inputData.gramSize,
                 costOfProtein: this.costOfProtein,
                 proteinPerItem: this.proteinPerItem,
                 caloriesPerItem: this.caloriesPerItem
             });
-            this.name = null,
-            this.carbs = null;
-            this.protein = null;
-            this.fat = null;
-            this.gramSize = null,
-            this.cost = null,
-            this.caloriesPerItem = null
+            this.inputData.name = null,
+            this.inputData.carbs = null;
+            this.inputData.protein = null;
+            this.inputData.fat = null;
+            this.inputData.gramSize = null,
+            this.inputData.cost = null,
+            this.inputData.caloriesPerItem = null
         }
     },
     template: `<div>
-    <input type='text' v-model='name' placeholder='Food name' class='mobileBlock' @keydown.enter="save"/>
-    <input type='number' v-model='carbs' placeholder='Carbs per 100g' class='mobileBlock' @keydown.enter="save"/>
-    <input type='number' v-model='protein' placeholder='Protein per 100g' class='mobileBlock' @keydown.enter="save"/>
-    <input type='number' v-model='fat' placeholder='Fat per 100g' class='mobileBlock' @keydown.enter="save"/>
-    <input type='number' v-model='cost' placeholder='Cost per item' class='mobileBlock' @keydown.enter="save"/>
-    <input type='number' v-model='gramSize' placeholder='Grams per item' class='mobileBlock' @keydown.enter="save"/>
+    <input type='text' ref='input' v-model='name' placeholder='Food name' class='mobileBlock' @keydown.enter="save"/>
+    <input type='number' v-model='inputData.carbs' placeholder='Carbs per 100g' class='mobileBlock' @keydown.enter="save"/>
+    <input type='number' v-model='inputData.protein' placeholder='Protein per 100g' class='mobileBlock' @keydown.enter="save"/>
+    <input type='number' v-model='inputData.fat' placeholder='Fat per 100g' class='mobileBlock' @keydown.enter="save"/>
+    <input type='number' v-model='inputData.cost' placeholder='Cost per item' class='mobileBlock' @keydown.enter="save"/>
+    <input type='number' v-model='inputData.gramSize' placeholder='Grams per item' class='mobileBlock' @keydown.enter="save"/>
 <p class='mobileBlock'>Percent protein: {{ Math.round(proteinratio) }}<br>
 Calories per 100g: {{ Math.round(calories) }}<br>
 Cost per 100g of protein: {{parseFloat(costOfProtein).toFixed(2)}}</p>
