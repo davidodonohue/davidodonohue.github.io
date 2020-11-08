@@ -28,6 +28,13 @@
         Cost per 100g of protein: {{parseFloat(costOfProtein).toFixed(2)}}</p>
         <button @click="save" class='save'><i class="far fa-save"></i> Save Item</button>
             <hr v-if="savedFood.length > 0">
+            <div class="tracker" @click="toggleTracker">
+                Tracker
+                <div :style="trackerContent">
+                    Calories eaten today: {{trackedCalories}}<br>
+                    Protein eaten today: {{trackedProtein}}<br>
+                </div>
+            </div>
             Sort food by: <select v-model="sortBy">
                 <option>Percent protein</option>
                 <option>Cost of protein</option>
@@ -55,6 +62,10 @@ app = new Vue({
                     name: null,
                     cost: null,
                     gramSize: null
+                },
+                tracker: {
+                    showTracker: false,
+                    trackedFood: []
                 }
             }
         },
@@ -120,6 +131,9 @@ app = new Vue({
                             }
                         });
                     }
+            },
+            toggleTracker() {
+                this.showTracker = !this.showTracker;
             }
         },
         mounted() {
@@ -157,6 +171,15 @@ app = new Vue({
                 } else {
                     return 0;
                 }
+            },
+            trackerContent: function(){
+                return this.showTracker ? {"display": "block"} : {"display" : "none"};
+            },
+            trackedCalories: function(){
+                return 0;
+            },
+            trackedProtein: function(){
+                return 0;
             }
         },
         watch: {
