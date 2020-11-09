@@ -108,24 +108,24 @@ app = new Vue({
             sortList() {
                 if (this.sortBy == 'Percent protein'){
                         this.savedFood.sort(function(a,b){
-                            if(a.data.proteinratio && b.data.proteinratio){
-                                return b.data.proteinratio - a.data.proteinratio;
+                            if(a.proteinratio && b.proteinratio){
+                                return b.proteinratio - a.proteinratio;
                             } else {
                                 return 1
                             }
                         });
                     } else if (this.sortBy == 'Cost of protein'){
                         this.savedFood.sort(function(a,b){
-                            if(a.data.costOfProtein && b.data.costOfProtein){
-                                return a.data.costOfProtein - b.data.costOfProtein;
+                            if(a.costOfProtein && b.costOfProtein){
+                                return a.costOfProtein - b.costOfProtein;
                             } else {
                                 return 1;
                             }
                         });
                     } else if (this.sortBy == 'Caloric density') {
                         this.savedFood.sort(function(a,b){
-                            if(a.data.calories && b.data.calories){
-                                return a.data.calories - b.data.calories;
+                            if(a.calories && b.calories){
+                                return a.calories - b.calories;
                             } else {
                                 return 1;
                             }
