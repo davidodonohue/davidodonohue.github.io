@@ -6,8 +6,9 @@ const TrackedItem = Vue.component('tracked-item', {
         }
     },
     template: `<div class="trackedItem">
-    Name: {{item.name}}<br>
-    Amount: {{item.amount}} grams<br>
+    {{item.name}}<br>
+    <span v-if="item.amountGrams">{{item.amountGrams}} grams<br></span>
+    <span v-if="item.amountServes">{{item.amountServes}} serves<br></span>
     <button @click="removeTrackedItem" class="edit"><i class="fas fa-minus-circle"></i> Remove item from tracker</button>
 </div>`
 });

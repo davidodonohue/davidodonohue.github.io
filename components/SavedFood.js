@@ -2,7 +2,8 @@ const SavedFood = Vue.component('saved-food', {
     props: ['data', 'index', 'hr'],
     data() {
         return {
-            trackerAmount: null
+            trackerGrams: null,
+            trackerServes: null
         }
     },
     methods: {
@@ -14,9 +15,10 @@ const SavedFood = Vue.component('saved-food', {
             this.remove();
         },
         track() {
-            this.$emit('add-to-tracker', this.data, this.trackerAmount);
-            this.trackerAmount = null;
-        }
+            this.$emit('add-to-tracker', this.data, this.trackerGrams, this.trackerServes);
+            this.trackerGrams = null;
+            this.trackerServes = null;
+        },
     },
     template: `<div>
 <p>{{ data.name }}</br>
@@ -28,7 +30,8 @@ const SavedFood = Vue.component('saved-food', {
 <span v-if="data.caloriesPerItem">{{Math.round(data.caloriesPerItem)}} calories per item</br></span>
 <button @click="remove" class='remove'><i class="fas fa-ban"></i> Remove</button>
 <button @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button>
-<input type="number" v-model="trackerAmount" placeholder="Grams to add" />
+<input type="number" v-model="trackerGrams" placeholder="Grams to add" />
+<input type="number" v-model="trackerServes" placeholder="Serves to add" />
 <button @click="track" class="edit"><i class="fas fa-utensils"></i> Add to tracker</button>
 <hr v-if="hr" style="width: 100%;">
     </div>`

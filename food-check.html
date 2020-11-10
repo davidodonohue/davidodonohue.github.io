@@ -43,7 +43,7 @@
                 <option>Cost of protein</option>
                 <option>Caloric density</option>
             </select>
-            <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-tracker="addToTracker" :hr="index != savedFood.length - 1"></saved-food>
+            <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-tracker="addTracker" :hr="index != savedFood.length - 1"></saved-food>
         </div>
     </body>
 </html>
@@ -134,14 +134,12 @@ app = new Vue({
                         });
                     }
             },
-            toggleTracker() {
-                this.trackerData.showTracker = !this.trackerData.showTracker;
-            },
-            addToTracker(object, amountAdded){
+            addTracker(object, gramsAmount, servesAmount){
                 this.trackerData.trackedFood.push({
                     ...object,
-                    amount: amountAdded
-                })
+                    amountGrams: gramsAmount,
+                    amountServes: servesAmount
+                });
                 this.updateStorage();
                 // if (this.trackerData.trackedFood.hasOwnProperty(object.name)){
                 //     this.trackerData.trackedFood[object.name] = {
@@ -206,7 +204,12 @@ app = new Vue({
                 var rtn = 0;
                 for (let i = 0; i < this.trackerData.trackedFood.length; i++){
                     var item = this.trackerData.trackedFood[i]
-                    rtn += (item.caloriesPer100g * item.amount / 100);
+                    if (item.amountGrams){
+                        rtn += (item.caloriesPer100g * item.amountGrams / 100);
+                    }
+                    if (item.amountServes){
+                        rtn += (item.caloriesPerItem * item.amountServes);
+                    }
                 }
                 return rtn;
             },
@@ -214,7 +217,13 @@ app = new Vue({
                 var rtn = 0;
                 for (let i = 0; i < this.trackerData.trackedFood.length; i++){
                     var item = this.trackerData.trackedFood[i]
-                    rtn += (item.proteinPer100g * item.amount / 100);
+                    if (item.amountGrams){
+                        rtn += (item.proteinPer100g * item.amountGrams / 100);
+                    }
+                    if (item.amountServes){
+                        rtn += (item.proteinPerItem * item.amountServes);
+                    }
+                    
                 }
                 return rtn;
             },
