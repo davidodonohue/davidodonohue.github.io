@@ -11,38 +11,39 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-        <script src="./components/FoodItem.js"></script>
+        <script src="./components/Tracker.js"></script>
         <script src="./components/SavedFood.js"></script>
+        <script src="./components/TrackedItem.js"></script>
         <link href="./assets/css/all.css" rel="stylesheet">
     </head>
     <body>
         <div id ='app'>
             <input type='text' ref='input' v-model='inputData.name' placeholder='Food name' />
-            <input type='number' v-model='inputData.carbs' placeholder='Carbs per 100g' />
-            <input type='number' v-model='inputData.protein' placeholder='Protein per 100g' />
-            <input type='number' v-model='inputData.fat' placeholder='Fat per 100g' />
-            <input type='number' v-model='inputData.cost' placeholder='Cost per item' />
-            <input type='number' v-model='inputData.gramSize' placeholder='Grams per item' @keydown.enter="save"/>
-        <p>Percent protein: {{ Math.round(proteinratio) }}<br>
-        Calories per 100g: {{ Math.round(calories) }}<br>
-        Cost per 100g of protein: {{parseFloat(costOfProtein).toFixed(2)}}</p>
-        <button @click="save" class='save'><i class="far fa-save"></i> Save Item</button>
-            <hr v-if="savedFood.length > 0">
-            <div class="tracker" @click="toggleTracker">
-                Tracker
-                <div :style="trackerContent">
-                    Calories eaten today: {{trackedCalories}}<br>
-                    Protein eaten today: {{trackedProtein}}<br>
-                </div>
+            <input type='number' v-model='inputData.carbsPer100g' placeholder='Carbs per 100g' />
+            <input type='number' v-model='inputData.proteinPer100g' placeholder='Protein per 100g' />
+            <input type='number' v-model='inputData.fatPer100g' placeholder='Fat per 100g' />
+            <input type='number' v-model='inputData.costPerItem' placeholder='Cost per item' />
+            <input type='number' v-model='inputData.gramsPerItem' placeholder='Grams per item' @keydown.enter="save"/>
+            <button @click="save" class='save'><i class="far fa-save"></i> Save Item</button>
+            <hr>
+            <div class="tracker">
+                Tracker<br>
+                <input type='number' v-model='trackerData.userBodyWeight' placeholder='Bodyweight in kgs' />
+                <span v-if="trackerData.userBodyWeight">Target protein per day: {{Math.round(targetProteinDay)}}</span><br>
+                <input type='number' v-model='trackerData.userMealsPerDay' placeholder='Meals per day' />
+                <span v-if="trackerData.userMealsPerDay">Target protein per meal: {{Math.round(targetProteinMeal)}}</span><br>
+                Calories eaten today: {{Math.round(trackedCalories)}}<br>
+                Protein eaten today: {{Math.round(trackedProtein)}}<br>
+                <tracked-item v-for="(item, index) in trackerData.trackedFood" :key="index" :item="item" :index="index" @remove-tracked-item="removeTrackedItem"></tracked-item>
+                <button @click="clearTracker" class='remove'><i class="fas fa-trash"></i> Reset tracker</button>
             </div>
+            <hr>
             Sort food by: <select v-model="sortBy">
                 <option>Percent protein</option>
                 <option>Cost of protein</option>
                 <option>Caloric density</option>
-              </select>
-            <div>
-                <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" :hr="index != savedFood.length - 1"></saved-food>    
-            </div>
+            </select>
+            <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-tracker="addToTracker" :hr="index != savedFood.length - 1"></saved-food>
         </div>
     </body>
 </html>
@@ -56,40 +57,40 @@ app = new Vue({
                 savedFood: [],
                 sortBy: null,
                 inputData: {
-                    carbs: null,
-                    protein: null,
-                    fat: null,
+                    carbsPer100g: null,
+                    proteinPer100g: null,
+                    fatPer100g: null,
                     name: null,
-                    cost: null,
-                    gramSize: null
+                    costPerItem: null,
+                    gramsPerItem: null
                 },
-                tracker: {
+                trackerData: {
                     showTracker: false,
-                    trackedFood: []
+                    trackedFood: [],
+                    userBodyWeight: null,
+                    userMealsPerDay: null
                 }
             }
         },
         methods: {
+            printData(){
+                console.log("Data: ", this.trackerData.trackedFood);
+            },
             save(){
                 this.savedFood.push({
-                    name: this.inputData.name, 
-                    carbs: this.inputData.carbs,
-                    protein: this.inputData.protein,
-                    fat: this.inputData.fat,
-                    proteinratio: this.proteinratio,
-                    calories: this.calories,
-                    cost: this.inputData.cost,
-                    gramSize: this.inputData.gramSize,
-                    costOfProtein: this.costOfProtein,
+                    ...this.inputData,
+                    costPerProtein: this.costPerProtein,
                     proteinPerItem: this.proteinPerItem,
-                    caloriesPerItem: this.caloriesPerItem
+                    caloriesPerItem: this.caloriesPerItem,
+                    proteinPercent: this.proteinPercent,
+                    caloriesPer100g: this.caloriesPer100g,
                 });
                 this.inputData.name = null;
-                this.inputData.carbs = null;
-                this.inputData.protein = null;
-                this.inputData.fat = null;
-                this.inputData.cost = null;
-                this.inputData.gramSize = null;
+                this.inputData.carbsPer100g = null;
+                this.inputData.proteinPer100g = null;
+                this.inputData.fatPer100g = null;
+                this.inputData.costPerItem = null;
+                this.inputData.gramsPerItem = null;
                 this.sortList();
                 this.updateStorage();
             },
@@ -104,28 +105,29 @@ app = new Vue({
             updateStorage(){
                 localStorage.savedFood = JSON.stringify(this.savedFood);
                 localStorage.sortBy = this.sortBy;
+                localStorage.trackerData = JSON.stringify(this.trackerData);
             },
             sortList() {
                 if (this.sortBy == 'Percent protein'){
                         this.savedFood.sort(function(a,b){
-                            if(a.proteinratio && b.proteinratio){
-                                return b.proteinratio - a.proteinratio;
+                            if(a.proteinPercent && b.proteinPercent){
+                                return b.proteinPercent - a.proteinPercent;
                             } else {
                                 return 1
                             }
                         });
                     } else if (this.sortBy == 'Cost of protein'){
                         this.savedFood.sort(function(a,b){
-                            if(a.costOfProtein && b.costOfProtein){
-                                return a.costOfProtein - b.costOfProtein;
+                            if(a.costPerProtein && b.costPerProtein){
+                                return a.costPerProtein - b.costPerProtein;
                             } else {
                                 return 1;
                             }
                         });
                     } else if (this.sortBy == 'Caloric density') {
                         this.savedFood.sort(function(a,b){
-                            if(a.calories && b.calories){
-                                return a.calories - b.calories;
+                            if(a.caloriesPer100g && b.caloriesPer100g){
+                                return a.caloriesPer100g - b.caloriesPer100g;
                             } else {
                                 return 1;
                             }
@@ -133,7 +135,32 @@ app = new Vue({
                     }
             },
             toggleTracker() {
-                this.showTracker = !this.showTracker;
+                this.trackerData.showTracker = !this.trackerData.showTracker;
+            },
+            addToTracker(object, amountAdded){
+                this.trackerData.trackedFood.push({
+                    ...object,
+                    amount: amountAdded
+                })
+                this.updateStorage();
+                // if (this.trackerData.trackedFood.hasOwnProperty(object.name)){
+                //     this.trackerData.trackedFood[object.name] = {
+                //         ...object,
+                //         amount: parseInt(amountAdded) + this.trackerData.trackedFood[object.name].amount
+                //     }
+                // } else {
+                //     this.trackerData.trackedFood[object.name] = {
+                //         ...object,
+                //         amount: parseInt(amountAdded)
+                //     };
+                // }
+            },
+            clearTracker(){
+                this.trackerData.trackedFood = [];
+            },
+            removeTrackedItem(index){
+                this.trackerData.trackedFood.splice(index, 1);
+                this.updateStorage();
             }
         },
         mounted() {
@@ -143,50 +170,66 @@ app = new Vue({
             if (localStorage.sortBy){
                 this.sortBy = localStorage.sortBy;
             }
+            if (localStorage.trackerData){
+                this.trackerData = JSON.parse(localStorage.trackerData);
+            }
         },
         computed: {
-            proteinratio: function() {
-                return (this.inputData.carbs && this.inputData.protein && this.inputData.fat) ? Math.round(this.inputData.protein * 400 / (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)) : 0;
+            proteinPercent: function() {
+                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? Math.round(this.inputData.proteinPer100g * 400 / (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)) : 0;
             },
-            calories: function() {
-                return (this.inputData.carbs * 4 + this.inputData.protein * 4 + this.inputData.fat * 4)
+            caloriesPer100g: function() {
+                return (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)
             },
-            costOfProtein: function() {
-                if (this.inputData.cost && this.inputData.gramSize){
-                    return ((this.inputData.cost * 10000) / (this.inputData.gramSize * this.inputData.protein));
+            costPerProtein: function() {
+                if (this.inputData.costPerItem && this.inputData.gramsPerItem){
+                    return ((this.inputData.costPerItem * 10000) / (this.inputData.gramsPerItem * this.inputData.proteinPer100g));
                 } else {
                     return 0;
                 }
             },
             proteinPerItem: function(){
-                if (this.inputData.protein && this.inputData.gramSize){
-                    return (this.inputData.protein * (this.inputData.gramSize / 100))
+                if (this.inputData.proteinPer100g && this.inputData.gramsPerItem){
+                    return (this.inputData.proteinPer100g * (this.inputData.gramsPerItem / 100))
                 } else {
                     return 0;
                 }
             },
             caloriesPerItem: function(){
-                if (this.inputData.gramSize){
-                    return ((this.calories * this.inputData.gramSize) / 100); 
+                if (this.inputData.gramsPerItem){
+                    return ((this.caloriesPer100g * this.inputData.gramsPerItem) / 100); 
                 } else {
                     return 0;
                 }
             },
-            trackerContent: function(){
-                return this.showTracker ? {"display": "block"} : {"display" : "none"};
-            },
             trackedCalories: function(){
-                return 0;
+                var rtn = 0;
+                for (let i = 0; i < this.trackerData.trackedFood.length; i++){
+                    var item = this.trackerData.trackedFood[i]
+                    rtn += (item.caloriesPer100g * item.amount / 100);
+                }
+                return rtn;
             },
             trackedProtein: function(){
-                return 0;
+                var rtn = 0;
+                for (let i = 0; i < this.trackerData.trackedFood.length; i++){
+                    var item = this.trackerData.trackedFood[i]
+                    rtn += (item.proteinPer100g * item.amount / 100);
+                }
+                return rtn;
+            },
+            targetProteinDay: function(){
+                return this.trackerData.userBodyWeight ? (this.trackerData.userBodyWeight * 1.6) : 0;
+            },
+            targetProteinMeal: function (){
+                return this.trackerData.userMealsPerDay ? (this.targetProteinDay / this.trackerData.userMealsPerDay) : 0;
             }
         },
         watch: {
             sortBy: function(val){
                 this.sortList();
                 this.updateStorage();
-            }
+            },
         }
     });
 
