@@ -28,10 +28,8 @@ const SavedFood = Vue.component('saved-food', {
 <span v-if="data.caloriesPerItem">{{Math.round(data.caloriesPerItem)}} calories per item</br></span>
 <button @click="remove" class='remove'><i class="fas fa-ban"></i> Remove</button>
 <button @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button>
-<span>
 <input type="number" v-model="trackerAmount" placeholder="Grams to add" />
 <button @click="track" class="edit"><i class="fas fa-utensils"></i> Add to tracker</button>
-</span>
 <hr v-if="hr" style="width: 100%;">
     </div>`
 });
