@@ -1146,9 +1146,9 @@
    *
    * @param  {Object}   subject      The object to reduce over.
    * @param  {Function} fn           The reducer function.
-   * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+   * @param  {mix}    initialValue The initial value for the reducer, defaults to subject[0].
    * @param  {Object}   thisContext  The context for the reducer.
-   * @return {mixed}                 The final result.
+   * @return {mix}                 The final result.
    */
 
 

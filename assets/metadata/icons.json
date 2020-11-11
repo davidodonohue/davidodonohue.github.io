@@ -4808,7 +4808,7 @@
       "terms": [
         "cocktail",
         "milkshake",
-        "mixer",
+        "mix",
         "puree",
         "smoothie"
       ]
@@ -4850,7 +4850,7 @@
         "communication",
         "fantasy",
         "milkshake",
-        "mixer",
+        "mix",
         "puree",
         "silly",
         "smoothie"
@@ -34561,7 +34561,7 @@
       "brands"
     ]
   },
-  "mixer": {
+  "mix": {
     "changes": [
       "5.12.1",
       "5.14.0"
@@ -34574,7 +34574,7 @@
       "brands"
     ],
     "unicode": "e056",
-    "label": "Mixer",
+    "label": "mix",
     "voted": true,
     "svg": {
       "brands": {

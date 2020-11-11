@@ -1787,7 +1787,7 @@ blender:
     terms:
       - cocktail
       - milkshake
-      - mixer
+      - mix
       - puree
       - smoothie
   styles:
@@ -1805,7 +1805,7 @@ blender-phone:
       - communication
       - fantasy
       - milkshake
-      - mixer
+      - mix
       - puree
       - silly
       - smoothie
@@ -12829,11 +12829,11 @@ mixcloud:
     - brands
   unicode: f289
   voted: false
-mixer:
+mix:
   changes:
     - 5.12.1
     - 5.14.0
-  label: Mixer
+  label: mix
   search:
     terms: []
   styles:

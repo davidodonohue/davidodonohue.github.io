@@ -14,7 +14,6 @@ const FoodItem = Vue.component('food-item', {
     mounted: {
         if (editData){
             this.inputData = Object.assign({}, editData);
-            console.log("editdata: ", editData)
             this.$refs.inputData.focus();
         }
     },
