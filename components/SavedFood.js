@@ -22,7 +22,7 @@ const SavedFood = Vue.component('saved-food', {
     },
     template: `<div>
 <p>{{ data.name }}</br>
-<span v-if="data.proteinPer100gPercent">{{ Math.round(data.proteinPer100gPercent) + '%'}} of calories from proteinPer100g</br></span>
+<span v-if="data.proteinPercent">{{ Math.round(data.proteinPercent) + '%'}} of calories from protein</br></span>
 <span v-if="data.proteinPer100g">{{data.proteinPer100g}} grams of protein per 100g</br></span>
 <span v-if="data.costPerProtein">{{'$' + parseFloat(data.costPerProtein).toFixed(2)}} per 100g of protein</br></span>
 <span v-if="data.caloriesPer100g">{{ Math.round(data.caloriesPer100g) }} calories per 100g</br></span>

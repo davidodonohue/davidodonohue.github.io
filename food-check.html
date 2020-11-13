@@ -35,7 +35,7 @@
                 {{Math.round(mixCalories)}} calories<br>
                 {{Math.round(mixProtein)}} grams of protein<br>
                 {{Math.round(mixProteinPercent)}}% of calories from protein<br>
-                ${{parseFloat(mixCostPerProtein).toFixed(2)}} per 100g of protein<br>
+                <span v-if="mixCostPerProtein">${{parseFloat(mixCostPerProtein).toFixed(2)}} per 100g of protein<br></span>
                 <mix-food v-for="(food, index) in mixData.mixFood" :key="index" :food="food" :index="index" @remove-mix-food="removeMixFood"></mix-food>
                 <button @click="clearMix" class='clearMix'><i class="fas fa-trash"></i> Empty mixer</button>
             </div>
@@ -107,30 +107,30 @@ app = new Vue({
             },
             sortList() {
                 if (this.sortBy == 'Percent protein'){
-                        this.savedFood.sort(function(a,b){
-                            if(a.proteinPercent && b.proteinPercent){
-                                return b.proteinPercent - a.proteinPercent;
-                            } else {
-                                return 1
-                            }
-                        });
-                    } else if (this.sortBy == 'Cost of protein'){
-                        this.savedFood.sort(function(a,b){
-                            if(a.costPerProtein && b.costPerProtein){
-                                return a.costPerProtein - b.costPerProtein;
-                            } else {
-                                return 1;
-                            }
-                        });
-                    } else if (this.sortBy == 'Caloric density') {
-                        this.savedFood.sort(function(a,b){
-                            if(a.caloriesPer100g && b.caloriesPer100g){
-                                return a.caloriesPer100g - b.caloriesPer100g;
-                            } else {
-                                return 1;
-                            }
-                        });
-                    }
+                    this.savedFood.sort(function(a,b){
+                        if(a.proteinPercent && b.proteinPercent){
+                            return b.proteinPercent - a.proteinPercent;
+                        } else {
+                            return 1
+                        }
+                    });
+                } else if (this.sortBy == 'Cost of protein'){
+                    this.savedFood.sort(function(a,b){
+                        if(a.costPerProtein && b.costPerProtein){
+                            return a.costPerProtein - b.costPerProtein;
+                        } else {
+                            return 1;
+                        }
+                    });
+                } else if (this.sortBy == 'Caloric density') {
+                    this.savedFood.sort(function(a,b){
+                        if(a.caloriesPer100g && b.caloriesPer100g){
+                            return a.caloriesPer100g - b.caloriesPer100g;
+                        } else {
+                            return 1;
+                        }
+                    });
+                }
             },
             addMix(object, gramsAmount, servesAmount){
                 this.mixData.mixFood.push({
@@ -222,6 +222,9 @@ app = new Vue({
                 // get cost per protein and number of grams of each food
                 for (let i = 0; i < this.mixData.mixFood.length; i++){
                     var item = this.mixData.mixFood[i]
+                    if (!item.costPerItem){
+                        return null;
+                    }
                     if (item.amountGrams){
                         costPerProteinArray.push([item.costPerProtein, item.amountGrams])
                     }
