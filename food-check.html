@@ -21,23 +21,28 @@
             <input type='number' v-model='inputData.carbsPer100g' placeholder='Carbs per 100g' />
             <input type='number' v-model='inputData.proteinPer100g' placeholder='Protein per 100g' />
             <input type='number' v-model='inputData.fatPer100g' placeholder='Fat per 100g' />
-            <input type='number' v-model='inputData.costPerItem' placeholder='Cost per item' />
-            <input type='number' v-model='inputData.gramsPerItem' placeholder='Grams per item' @keydown.enter="save"/>
-            <button @click="save" class='save'><i class="far fa-save"></i> Save Food</button>
+            <input type='number' v-if="fibreEnabled" v-model='inputData.fibrePer100g' placeholder='Fibre per 100g' />
+            <input type='number' v-model='inputData.serveGrams' placeholder='Grams per serve'/>
+            <input type='number' v-model='inputData.netGrams' placeholder='Net grams' />
+            <input type='number' v-model='inputData.netCost' placeholder='Net cost' @keydown.enter="save"/>
+            <button @click="save" class='save'><i class="far fa-save"></i> Save food</button>
             <hr>
             <div class="mix">
                 Mixer<br>
                 <input type='number' v-model='mixData.userBodyWeight' placeholder='Bodyweight in kgs' /><br>
-                <span v-if="mixData.userBodyWeight">Target protein per day: {{Math.round(targetProteinDay)}}<br></span>
+                <span>Target protein per day: {{targetProteinDay ? Math.round(targetProteinDay) : 'Enter bodyweight to calculate'}}<br></span>
                 <input type='number' v-model='mixData.userMealsPerDay' placeholder='Meals per day' /><br>
-                <span v-if="mixData.userMealsPerDay">Target protein per meal: {{Math.round(targetProteinMeal)}}<br></span>
+                <span>Target protein per meal: {{targetProteinMeal ? Math.round(targetProteinMeal) : 'Enter bodyweight and number of meals per day to calculate'}}<br></span>
                 Mixer contains:<br>
                 {{Math.round(mixCalories)}} calories<br>
                 {{Math.round(mixProtein)}} grams of protein<br>
                 {{Math.round(mixProteinPercent)}}% of calories from protein<br>
+                <span v-if="fibreEnabled">{{Math.round(mixFibre)}} grams of fibre<br></span>
                 <span v-if="mixCostPerProtein">${{parseFloat(mixCostPerProtein).toFixed(2)}} per 100g of protein<br></span>
                 <mix-food v-for="(food, index) in mixData.mixFood" :key="index" :food="food" :index="index" @remove-mix-food="removeMixFood"></mix-food>
-                <button @click="clearMix" class='clearMix'><i class="fas fa-trash"></i> Empty mixer</button>
+                <button @click="clearMix" class='clearMix'><i class="fas fa-trash"></i> Empty mixer</button><br>
+                <input type='text' v-model='mixData.newFoodName' placeholder='New food name' />
+                <button @click="saveNewFood" class='save'><i class="far fa-save"></i> Save mixer as new food</button>
             </div>
             <hr>
             Sort food by: <select v-model="sortBy">
@@ -46,6 +51,7 @@
                 <option>Caloric density</option>
             </select>
             <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-mix="addMix" :hr="index != savedFood.length - 1"></saved-food>
+            <button @click="toggleFibre" class='edit'>Toggle fibre</button>
         </div>
     </body>
 </html>
@@ -63,32 +69,57 @@ app = new Vue({
                     proteinPer100g: null,
                     fatPer100g: null,
                     name: null,
-                    costPerItem: null,
-                    gramsPerItem: null
+                    serveGrams: null,
+                    netGrams: null,
+                    netCost: null,
+                    fibrePer100g: null
                 },
                 mixData: {
                     mixFood: [],
                     userBodyWeight: null,
-                    userMealsPerDay: null
-                }
+                    userMealsPerDay: null,
+                    newFoodName: null
+                },
+                fibreEnabled: true
             }
         },
         methods: {
+            toggleFibre(){
+                this.fibreEnabled = !this.fibreEnabled;
+                this.updateStorage();
+            },
+            saveNewFood() {
+                this.savedFood.push({
+                    name: this.mixData.newFoodName,
+                    costPerProtein: this.mixCostPerProtein,
+                    proteinPerServe: this.mixProtein,
+                    caloriesPerServe: this.mixCalories,
+                    serveGrams: this.mixGrams,
+                    caloriesPer100g: this.mixCalories * 100 / this.mixGrams,
+                    proteinPercent: this.mixProteinPercent,
+                    editEnabled: false
+                });
+                this.mixData.newFoodName = null;
+                this.updateStorage();
+            },
             save(){
                 this.savedFood.push({
                     ...this.inputData,
                     costPerProtein: this.costPerProtein,
-                    proteinPerItem: this.proteinPerItem,
-                    caloriesPerItem: this.caloriesPerItem,
+                    proteinPerServe: this.proteinPerServe,
+                    caloriesPerServe: this.caloriesPerServe,
                     proteinPercent: this.proteinPercent,
                     caloriesPer100g: this.caloriesPer100g,
+                    editEnabled: true
                 });
                 this.inputData.name = null;
                 this.inputData.carbsPer100g = null;
                 this.inputData.proteinPer100g = null;
                 this.inputData.fatPer100g = null;
-                this.inputData.costPerItem = null;
-                this.inputData.gramsPerItem = null;
+                this.inputData.serveGrams = null;
+                this.inputData.netGrams = null;
+                this.inputData.netCost = null;
+                this.inputData.fibrePer100g = null;
                 this.sortList();
                 this.updateStorage();
             },
@@ -104,6 +135,7 @@ app = new Vue({
                 localStorage.savedFood = JSON.stringify(this.savedFood);
                 localStorage.sortBy = this.sortBy;
                 localStorage.mixData = JSON.stringify(this.mixData);
+                localStorage.fibreEnabled = this.fibreEnabled;
             },
             sortList() {
                 if (this.sortBy == 'Percent protein'){
@@ -142,11 +174,12 @@ app = new Vue({
             },
             clearMix(){
                 this.mixData.mixFood = [];
+                this.updateStorage();
             },
             removeMixFood(index){
                 this.mixData.mixFood.splice(index, 1);
                 this.updateStorage();
-            }
+            },
         },
         mounted() {
             if (localStorage.savedFood){
@@ -158,34 +191,51 @@ app = new Vue({
             if (localStorage.mixData){
                 this.mixData = JSON.parse(localStorage.mixData);
             }
+            if (localStorage.fibreEnabled){
+                this.fibreEnabled = localStorage.fibreEnabled == 'true';
+            }
         },
         computed: {
             proteinPercent: function() {
-                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.proteinPer100g * 400 / (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)) : 0;
+                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.proteinPer100g * 400 / (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)) : null;
             },
             caloriesPer100g: function() {
-                return (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)
+                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4) : null;
             },
             costPerProtein: function() {
-                if (this.inputData.costPerItem && this.inputData.gramsPerItem){
-                    return ((this.inputData.costPerItem * 10000) / (this.inputData.gramsPerItem * this.inputData.proteinPer100g));
+                if (this.inputData.netCost && this.inputData.netGrams){
+                    return ((this.inputData.netCost * 10000) / (this.inputData.netGrams * this.inputData.proteinPer100g));
+                } else {
+                    return null;
+                }
+            },
+            proteinPerServe: function() {
+                if (this.inputData.proteinPer100g && this.inputData.serveGrams){
+                    return (this.inputData.proteinPer100g * (this.inputData.serveGrams / 100))
                 } else {
                     return 0;
                 }
             },
-            proteinPerItem: function(){
-                if (this.inputData.proteinPer100g && this.inputData.gramsPerItem){
-                    return (this.inputData.proteinPer100g * (this.inputData.gramsPerItem / 100))
+            caloriesPerServe: function() {
+                if (this.inputData.serveGrams){
+                    return ((this.caloriesPer100g * this.inputData.serveGrams) / 100); 
                 } else {
                     return 0;
                 }
             },
-            caloriesPerItem: function(){
-                if (this.inputData.gramsPerItem){
-                    return ((this.caloriesPer100g * this.inputData.gramsPerItem) / 100); 
-                } else {
-                    return 0;
+            mixGrams: function() {
+                var totalGrams = 0;
+                // get cost per protein and number of grams of each food
+                for (let i = 0; i < this.mixData.mixFood.length; i++){
+                    var item = this.mixData.mixFood[i]
+                    if (item.amountGrams){
+                        totalGrams += parseInt(item.amountGrams);
+                    }
+                    if (item.amountServes){
+                        totalGrams += parseInt(item.serveGrams * item.amountServes);
+                    }
                 }
+                return totalGrams;
             },
             mixCalories: function(){
                 var rtn = 0;
@@ -195,7 +245,7 @@ app = new Vue({
                         rtn += (item.caloriesPer100g * item.amountGrams / 100);
                     }
                     if (item.amountServes){
-                        rtn += (item.caloriesPerItem * item.amountServes);
+                        rtn += (item.caloriesPerServe * item.amountServes);
                     }
                 }
                 return rtn;
@@ -208,45 +258,55 @@ app = new Vue({
                         rtn += (item.proteinPer100g * item.amountGrams / 100);
                     }
                     if (item.amountServes){
-                        rtn += (item.proteinPerItem * item.amountServes);
+                        rtn += (item.proteinPerServe * item.amountServes);
                     }
                     
                 }
                 return rtn;
             },
             mixProteinPercent: function() {
-                return (this.mixProtein && this.mixCalories) ? ((this.mixProtein * 400) / this.mixCalories) : 0;
+                return (this.mixProtein && this.mixCalories) ? ((this.mixProtein * 400) / this.mixCalories) : null;
+            },
+            mixFibre: function() {
+                var rtn = 0;
+                for (let i = 0; i < this.mixData.mixFood.length; i++){
+                    var item = this.mixData.mixFood[i]
+                    if (item.amountGrams && item.fibrePer100g){
+                        rtn += (item.fibrePer100g * item.amountGrams / 100);
+                    }
+                    if (item.amountServes && item.fibrePer100g){
+                        rtn += ((item.fibrePer100g * (item.serveGrams / 100)) * item.amountServes);
+                    }
+                    
+                }
+                return rtn;
             },
             mixCostPerProtein: function() {
                 var costPerProteinArray = [];
                 // get cost per protein and number of grams of each food
                 for (let i = 0; i < this.mixData.mixFood.length; i++){
                     var item = this.mixData.mixFood[i]
-                    if (!item.costPerItem){
+                    if (!item.netCost){
                         return null;
                     }
                     if (item.amountGrams){
                         costPerProteinArray.push([item.costPerProtein, item.amountGrams])
                     }
                     if (item.amountServes){
-                        costPerProteinArray.push([item.costPerProtein, (item.gramsPerItem * item.amountServes)])
+                        costPerProteinArray.push([item.costPerProtein, (item.serveGrams * item.amountServes)])
                     }
                 }
-                var totalGrams = 0;
                 var costPerProteinAverage = 0;
                 for (let i = 0; i < costPerProteinArray.length; i++){
-                    totalGrams += parseInt(costPerProteinArray[i][1]);
-                }
-                for (let i = 0; i < costPerProteinArray.length; i++){
-                    costPerProteinAverage += (costPerProteinArray[i][0] * costPerProteinArray[i][1] / totalGrams);
+                    costPerProteinAverage += (costPerProteinArray[i][0] * costPerProteinArray[i][1] / this.mixGrams);
                 }
                 return costPerProteinAverage;
             },
             targetProteinDay: function(){
-                return this.mixData.userBodyWeight ? (this.mixData.userBodyWeight * 1.6) : 0;
+                return this.mixData.userBodyWeight ? (this.mixData.userBodyWeight * 1.6) : null;
             },
             targetProteinMeal: function (){
-                return this.mixData.userMealsPerDay ? (this.targetProteinDay / this.mixData.userMealsPerDay) : 0;
+                return this.mixData.userMealsPerDay ? (this.targetProteinDay / this.mixData.userMealsPerDay) : null;
             }
         },
         watch: {
