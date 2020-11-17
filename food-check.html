@@ -281,26 +281,25 @@ app = new Vue({
                 }
                 return rtn;
             },
-            mixCostPerProtein: function() {
-                var costPerProteinArray = [];
+            mixCost: function() {
+                var mixCost = 0;
                 // get cost per protein and number of grams of each food
                 for (let i = 0; i < this.mixData.mixFood.length; i++){
-                    var item = this.mixData.mixFood[i]
+                    var item = this.mixData.mixFood[i];
                     if (!item.netCost){
                         return null;
                     }
                     if (item.amountGrams){
-                        costPerProteinArray.push([item.costPerProtein, item.amountGrams])
+                        mixCost += (item.netCost * item.amountGrams / item.netGrams);
                     }
                     if (item.amountServes){
-                        costPerProteinArray.push([item.costPerProtein, (item.serveGrams * item.amountServes)])
+                        mixCost += (item.netCost * item.amountServes * item.serveGrams / item.netGrams);
                     }
                 }
-                var costPerProteinAverage = 0;
-                for (let i = 0; i < costPerProteinArray.length; i++){
-                    costPerProteinAverage += (costPerProteinArray[i][0] * costPerProteinArray[i][1] / this.mixGrams);
-                }
-                return costPerProteinAverage;
+                return mixCost;
+            },
+            mixCostPerProtein: function() {
+                return this.mixCost * 100 / this.mixProtein; 
             },
             targetProteinDay: function(){
                 return this.mixData.userBodyWeight ? (this.mixData.userBodyWeight * 1.6) : null;
