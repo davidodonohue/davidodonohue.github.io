@@ -28,7 +28,7 @@ const SavedFood = Vue.component('saved-food', {
 <span v-if="data.caloriesPerServe">{{Math.round(data.caloriesPerServe)}} calories per serve</br></span>
 <span v-if="data.serveGrams">{{Math.round(data.serveGrams)}} grams per serve</br></span>
 <button @click="remove" class='remove'><i class="fas fa-ban"></i> Remove</button>
-<button v-if="data.editEnabled" @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button>
+<button v-if="data.editEnabled" @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button><br>
 <input type="number" v-model="mixGrams" placeholder="Grams to add" />
 <input type="number" v-model="mixServes" placeholder="Serves to add" />
 <button @click="mix" class="mix"><i class="fas fa-utensils"></i> Add to mixer</button>
