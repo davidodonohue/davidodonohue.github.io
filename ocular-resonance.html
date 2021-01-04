@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ocular Resonance</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+        <link rel="manifest" href="./site.webmanifest">
+        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    </head>
+    <body>
+        <div id ='app'>
+            <div class="navbar">
+                <a href="#Home">Home</a>
+                <a href="#Gallery">Gallery</a>
+                <a href="#Contact">Contact</a>
+            </div>
+            <div class="parent">
+                <div id="Home" class="child" style="background-color: cornflowerblue;">
+                    <h1>Ocular Resonance</h1>
+                    <p>Sublime boutique artwork</p>
+                </div>
+                <div id="Gallery" class="child" style="background-color: darkturquoise">
+                    <h1>Gallery</h1>
+                    <div class="carousel">
+                        <transition name="component-fade" mode="out-in">
+                            <img :src="images[currentImageIndex]" :key="currentImageIndex">
+                        </transition>
+                    </div>
+                </div>
+                <div id="Contact" class="child" style="background-color: indigo">
+                    <h1>Contact</h1>
+                    <div class="card">
+                        Ph: 1234 5678<br>
+                        email: ocular.resonance@gmail.com<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+
+app = new Vue({
+    el: '#app',
+    data() {
+        return {
+            currentImageIndex: 0,
+            images: [
+                "./assets/ocular-resonance/birds.jpg",
+                "./assets/ocular-resonance/eye.jpg",
+                "./assets/ocular-resonance/koi.jpg",
+                "./assets/ocular-resonance/sunrise.jpg",
+                "./assets/ocular-resonance/wall.jpg",
+                "./assets/ocular-resonance/wave.jpg",
+            ],
+
+        }
+    },
+    methods: {
+        cycleArt(){
+            this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+            setTimeout(this.cycleArt, 5000);
+        },
+        top(){
+
+        }
+    },
+    mounted() {
+        this.cycleArt();
+    }
+})
+
+</script>
+
+<style>
+
+html, body {
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.parent {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    scroll-behavior: smooth;
+}
+
+.child {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    height: calc(100vh - 40px);
+    width: 100%;
+    color: whitesmoke;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1{
+    margin: 20px;
+    animation-name: textblur;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.card, .carousel {
+    background: whitesmoke;
+    color: darkslategrey;
+    border-radius: 20px;
+}
+
+.carousel{
+    height: 60vh;
+    width: 60vw;
+    margin: 5vh 5vw;
+    padding: 1vh 1vw;
+}
+
+.card {
+    margin: 10vh 10vw;
+    padding: 10vh 10vw;
+}
+
+img {
+    max-width: 60vw;
+    max-height: 60vh;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 40px;
+  background: dimgray;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.navbar a{
+    color: whitesmoke;
+    border: none;
+    margin: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    width:33%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar a:hover {
+    color: springgreen;
+    background-color: gray;
+}
+
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: all .8s ease-in-out;
+}
+
+.component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+  filter: blur(8px);
+}
+
+@keyframes textblur{
+    from {filter: blur(8px); letter-spacing: 5px;}
+    to {filter: blur(0px); letter-spacing: 0px;}
+}
+
+@keyframes example {
+  from {background-color: red;}
+  to {background-color: yellow;}
+}
+
+</style>
