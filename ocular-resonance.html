@@ -11,7 +11,7 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-
+        <script src="https://kit.fontawesome.com/02e9cf65f2.js"></script>
     </head>
     <body>
         <div id ='app'>
@@ -36,8 +36,14 @@
                 <div id="Contact" class="child" style="background-color: indigo">
                     <h1>Contact</h1>
                     <div class="card">
-                        Ph: 1234 5678 <button @click="copyToClipboard('1234 5678')">Copy to clipboard</button> <a href="tel:12345678">Make a call</a> <a href="sms:12345678">Send an SMS</a> <a href="whatsapp://send?text=I love Occular Resonance!" data-action="share/whatsapp/share">Share via Whatsapp</a><br>
-                        email: ocular.resonance@gmail.com <button @click="copyToClipboard('ocular.resonance@gmail.com')">Copy to clipboard</button> <a href="mailto:ocular.resonance@gmail.com">Open mail client</a><br>
+                        <h3>Phone</h3>
+                        <a href="sms:0400898102"><i class="far fa-comment"> SMS me</i></a>
+                        <button @click="copyToClipboard('0400898102')"><i class="far fa-copy"> Copy my phone number</i></button>
+                        <h3>Email</h3>
+                        <a href="mailto:ocular.resonance@gmail.com"><i class="fas fa-envelope"> Email me</i></a>
+                        <button @click="copyToClipboard('ocular.resonance@gmail.com')"><i class="far fa-copy"> Copy my email address</i></button>
+                        <h3>Social</h3>
+                        <a href="whatsapp://send?text=Check out this website! www.davidodonohue.github.io/ocular-resonance"><i class="far fa-paper-plane"> Share this page via WhatsApp</i></a>
                     </div>
                 </div>
             </div>
@@ -127,7 +133,6 @@ app = new Vue({
     justify-content: center;
     flex-wrap: wrap;
     scroll-behavior: smooth;
-
 }
 
 .child {
@@ -185,6 +190,29 @@ h1{
 .card {
     margin: 10vh 10vw;
     padding: 10vh 10vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.card a, .card button {
+    color: var(--darkColour);
+    border: none;
+    padding: 1vh 1vw;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--lightColour);
+    cursor: pointer;
+}
+
+.card h3 {
+    margin: 1vh 1vw;
+}
+
+i.fas, i.far {
+    font-weight: 400;
 }
 
 .purchaseImg:hover{
@@ -255,7 +283,7 @@ h1{
     margin: 5px;
     font-size: 16px;
     text-decoration: none;
-    width:33%;
+    flex-grow:1;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -291,11 +319,6 @@ h1{
 @keyframes textblur{
     from {filter: blur(8px); letter-spacing: 5px;}
     to {filter: blur(0px); letter-spacing: 0px;}
-}
-
-@keyframes example {
-  from {background-color: red;}
-  to {background-color: yellow;}
 }
 
 </style>
