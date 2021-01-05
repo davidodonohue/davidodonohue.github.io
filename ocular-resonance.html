@@ -49,7 +49,7 @@
             </div>
             <div class="galleryView" v-else>
                 <button @click="setGallery(false)">Exit gallery mode</button>
-                <span class="portraitHint">Suggestion: try viewing this gallery in portrait mode</span>
+                <span class="portraitHint">Suggestion: try viewing this gallery in landscape mode</span>
                 <div class="gallery">
                     <span v-for="img in images" :key="img" class="purchaseContainer">
                         <img class="purchaseImg" :src="img">
