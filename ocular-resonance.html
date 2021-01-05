@@ -20,7 +20,7 @@
                 <a href="#Gallery">Gallery</a>
                 <a href="#Contact">Contact</a>
             </div>
-            <div class="parent">
+            <div class="parent" v-if="!galleryOpen">
                 <div id="Home" class="child" style="background-color: cornflowerblue;">
                     <h1>Ocular Resonance</h1>
                     <p>Sublime boutique artwork</p>
@@ -29,16 +29,26 @@
                     <h1>Gallery</h1>
                     <div class="carousel">
                         <transition name="component-fade" mode="out-in">
-                            <img :src="images[currentImageIndex]" :key="currentImageIndex">
+                            <img class="bigImg" :src="images[currentImageIndex]" :key="currentImageIndex" @click="setGallery(true)">
                         </transition>
                     </div>
                 </div>
                 <div id="Contact" class="child" style="background-color: indigo">
                     <h1>Contact</h1>
                     <div class="card">
-                        Ph: 1234 5678<br>
-                        email: ocular.resonance@gmail.com<br>
+                        Ph: 1234 5678<button @click="copyToClipboard('1234 5678')">Copy to clipboard</button><a href="tel:12345678">Make a call</a><a href="sms:12345678">Send an SMS</a><a href="whatsapp://send?text=I love Occular Resonance!" data-action="share/whatsapp/share">Share via Whatsapp</a><br>
+                        email: ocular.resonance@gmail.com<button @click="copyToClipboard('ocular.resonance@gmail.com')">Copy to clipboard</button><a href="mailto:ocular.resonance@gmail.com">Open mail client</a><br>
                     </div>
+                </div>
+            </div>
+            <div class="galleryView" v-else>
+                <button @click="setGallery(false)">Exit gallery mode</button>
+                <span class="portraitHint">Suggestion: try viewing this gallery in portrait mode</span>
+                <div class="gallery">
+                    <span v-for="img in images" :key="img" class="purchaseContainer">
+                        <img class="purchaseImg" :src="img">
+                        <span class="purchaseText">Purchase</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -60,7 +70,7 @@ app = new Vue({
                 "./assets/ocular-resonance/wall.jpg",
                 "./assets/ocular-resonance/wave.jpg",
             ],
-
+            galleryOpen: false,
         }
     },
     methods: {
@@ -68,8 +78,19 @@ app = new Vue({
             this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
             setTimeout(this.cycleArt, 5000);
         },
-        top(){
-
+        setGallery(val){
+            this.galleryOpen = val;
+        },
+        copyToClipboard(text){
+            if (navigator.clipboard){
+                navigator.clipboard.writeText(text)
+                .catch(
+                    function() {
+                        console.log("Error copying to clipboard");
+                });
+            } else {
+                console.log("Clipboard API not supported on this device");
+            }  
         }
     },
     mounted() {
@@ -81,35 +102,41 @@ app = new Vue({
 
 <style>
 
-html, body {
-  height: 100vh;
-  overflow-y: hidden;
+:root{
+    --bigImgMaxWidth: 60vw;
+    --bigImgMaxHeight: 60vh;
+    --smallImgMaxWidth: 45vw;
+    --smallImgMaxHeight: 45vh;
+    --headerHeight: 40px;
+    --lightColour: whitesmoke;
+    --darkColour: darkslategrey
 }
 
 * {
     padding: 0;
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .parent {
     scroll-snap-type: y mandatory;
     overflow-y: scroll;
-    height: calc(100vh - 40px);
+    height: calc(100vh - var(--headerHeight));
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
     scroll-behavior: smooth;
+
 }
 
 .child {
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    height: calc(100vh - 40px);
+    height: calc(100vh - var(--headerHeight));
     width: 100%;
-    color: whitesmoke;
+    color: var(--lightColour);
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -125,16 +152,34 @@ h1{
 }
 
 .card, .carousel {
-    background: whitesmoke;
-    color: darkslategrey;
+    background: var(--lightColour);
+    color: var(--darkColour);
     border-radius: 20px;
 }
 
 .carousel{
-    height: 60vh;
-    width: 60vw;
+    height: var(--bigImgMaxHeight);
+    width: var(--bigImgMaxWidth);
     margin: 5vh 5vw;
-    padding: 1vh 1vw;
+    padding: 1px 1px;
+}
+
+.galleryView{
+    background-color: var(--darkColour);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: calc(100vh - var(--headerHeight));
+}
+
+.gallery{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .card {
@@ -142,16 +187,62 @@ h1{
     padding: 10vh 10vw;
 }
 
-img {
-    max-width: 60vw;
-    max-height: 60vh;
+.purchaseImg:hover{
+    transform: scale(1.01);
+    opacity: 0.3;
+}
+
+.purchaseContainer{
+    display: grid;
+    max-width: var(--smallImgMaxWidth);
+    max-height: var(--smallImgMaxHeight);
+    margin: 5px;
+}
+
+.purchaseImg{
+    transition: .5s ease-in-out;
+    max-width: var(--smallImgMaxWidth);
+    max-height: var(--smallImgMaxHeight);
+}
+
+.purchaseContainer:hover .purchaseImg{
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.purchaseText{
+    opacity: 0;
+    color: var(--lightColour);
+    width:100%;
+    height:100%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.purchaseContainer:hover .purchaseText{
+    opacity: 1;
+    z-index: 2;
+}
+
+.purchaseText, .purchaseImg{
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigImg {
+    max-width: var(--bigImgMaxWidth);
+    max-height: var(--bigImgMaxHeight);
 }
 
 .navbar {
   position: sticky;
+  z-index: 9;
   top: 0;
   width: 100%;
-  height: 40px;
+  height: var(--headerHeight);
   background: dimgray;
   display: flex;
   justify-content: space-evenly;
@@ -159,7 +250,7 @@ img {
 }
 
 .navbar a{
-    color: whitesmoke;
+    color: var(--lightColour);
     border: none;
     margin: 5px;
     font-size: 16px;
@@ -183,6 +274,18 @@ img {
 .component-fade-enter, .component-fade-leave-to {
   opacity: 0;
   filter: blur(8px);
+}
+
+.portraitHint{
+    display: none;
+}
+
+@media screen and (orientation:portrait)
+{
+   .portraitHint
+   {
+      display: inline;
+   }
 }
 
 @keyframes textblur{
