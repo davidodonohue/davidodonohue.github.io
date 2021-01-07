@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>David O'Donohue | Tic Tac Toe</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+        <link rel="manifest" href="./site.webmanifest">
+        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://kit.fontawesome.com/02e9cf65f2.js"></script>
+    </head>
+    <body>
+        <div id ='app'>
+            <h1>{{info}}</h1><button @click="resetGame">Reset game</button>
+            <div class="gameBoard">
+                <span v-for="(cell, index) in grid" @click="makeMove(index)" class="cell">
+                    {{cell}}
+                </span>
+            </div>
+            <!-- <span v-for="(row, rowIndex) in grid" class="row">
+                <span v-for="(cell, columnIndex) in row" :key="cell" @click="makeMove(rowIndex, columnIndex)" class="cell">
+                    {{cell}}Somthing
+                </span>
+                <br>
+            </span> -->
+        </div>
+    </body>
+</html>
+
+<script>
+
+app = new Vue({
+    el: '#app',
+    data() {
+        return {
+            grid: null,
+            // grid: [
+            //     [" ", " ", " "],
+            //     [" ", " ", " "],
+            //     [" ", " ", " "]
+            // ],
+            currentTurn: null,
+        }
+    },
+    methods: {
+        makeMove(index){
+            this.grid.splice(index, 1, "X");
+            console.log("grid: ", this.grid);
+            if (this.currentTurn == "user");
+                this.currentTurn = "ai";
+                // handle styling changes
+                // call AI move
+                this.currentTurn = "user";
+        },
+        resetGame(){
+            console.log("grid before reset: ", this.grid);
+            this.grid = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+            console.log("grid after reset: ", this.grid);
+            this.currentTurn = "user";
+        }
+    },
+    computed:{
+        info(){
+            if (this.currentTurn === "user"){
+                return "Your turn!";
+            } else if (this.currentTurn === "ai"){
+                return "Thinking...";
+            } else if (this.currentTurn === "playerWon"){
+                return "Congratulations! You beat the unbeatable bot!";
+            } else if (this.currentTurn === "draw"){
+                return "It's a draw! This is the best possible outcome!";
+            } else if (this.currentTurn == "aiWon"){
+                return "You lost to the unbeatable bot!";
+            } else {
+                return "I've lost my train of thought, please refresh me!";
+            }
+        }
+    },
+    mounted(){
+        this.resetGame();
+    }
+})
+
+</script>
+
+<style>
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    background-color: black;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.gameBoard {
+    display: grid;
+    grid-template-columns: repeat(3, min(25vh, 25vw));
+    grid-template-rows: repeat(3, min(25vh, 25vw));
+    place-content: center center;
+}
+
+.cell {
+    border: solid white;
+    background-color: black;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    transition-duration: 0.4s;
+    font-size: min(25vh, 25vw);
+}
+
+.fade-in-enter-active {
+  transition: opacity 300ms cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.fade-in-leave-active {
+  transition: opacity 225ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fade-in-enter,
+.fade-in-leave-to {
+  opacity: 0;
+}
+
+</style>
