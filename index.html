@@ -25,14 +25,15 @@
                 <div class="pageFrame" id="About">
                     <h1>About</h1>
                     <div class="card">
-                        Welcome to my website! I am a father, a software engineer, and a registered psychologist with interests in weight lifting, moral philosophy, mental health, computer science, and mathematics. I enjoy learning, reflecting, solving complex problems, building relationships, and helping others to develop.
+                        Welcome to my website! I am a father, a software engineer, and a registered psychologist with interests in weight lifting, moral philosophy, akrasia, mental health, computer science, and mathematics. I enjoy learning, reflecting, solving complex problems, building relationships, and helping others to develop.
                     </div>
                 </div>
                 <div class="pageFrame" id="Projects">
                     <h1>Projects</h1>
                     <div class="card">
                         <a href="food-check.html">Food check</a>Measure calories, protein, and cost of protein in the foods you eat.<hr>
-                        <a href="#">Forge workout tracker (in development)</a>Plan and track your workouts, and receive recommendations based on a decaying average of the data you enter.<br>
+                        <a href="forge.apk">Forge workout tracker (unsigned android apk)</a>Plan and track your workouts, and receive recommendations based on a proprietary algorithm.<hr>
+                        <a href="fly.html">Fly</a>A flappy-bird/helicopter-inspired game I developed in order to first learn javascript. Press spacebar or tap to fly up, your aim is to go through as many of the hoops as possible.
                     </div>
                 </div>
                 <div class="pageFrame" id="Articles">
@@ -130,8 +131,9 @@ app = new Vue({
 
 .card a, .card button {
     color: var(--darkColour);
-    border: none;
+    border: solid black;
     padding: 1vh 1vw;
+    margin: 1vh 1vw;
     font-size: 16px;
     text-decoration: none;
     display: flex;
@@ -139,6 +141,12 @@ app = new Vue({
     align-items: center;
     background-color: var(--lightColour);
     cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.card a:hover, .card button:hover {
+    color: var(--lightColour);
+    background-color: black;
 }
 
 .navbar a:hover {
