@@ -15,9 +15,9 @@
     </head>
     <body>
         <div id ='app'>
-            <h1>{{info}}</h1><button @click="resetGame">Reset game</button>
+            <h1>{{info}}</h1><button @click="resetGame">Reset game</button><button @click="console.log(gameState)">Print gameState</button>
             <div class="gameBoard">
-                <span v-for="(cell, index) in grid" @click="makeMove(index)" class="cell">
+                <span v-for="(cell, index) in gameState.grid" @click="tryMove(index)" class="cell">
                     {{cell}}
                 </span>
             </div>
@@ -37,44 +37,137 @@ app = new Vue({
     el: '#app',
     data() {
         return {
-            grid: null,
+            gameState: {
+                grid: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+                playerTurn: true,
+                winner: null
+            }
             // grid: [
             //     [" ", " ", " "],
             //     [" ", " ", " "],
             //     [" ", " ", " "]
             // ],
-            currentTurn: null,
         }
     },
     methods: {
-        makeMove(index){
-            this.grid.splice(index, 1, "X");
-            console.log("grid: ", this.grid);
-            if (this.currentTurn == "user");
-                this.currentTurn = "ai";
-                // handle styling changes
-                // call AI move
-                this.currentTurn = "user";
+        tryMove(index){
+            if (this.gameState.playerTurn && this.gameState.winner === null && this.gameState.grid[index] === " "){
+                this.gameState = this.makeMove(this.gameState, index);
+                if (this.gameState.winner === null){
+                    this.gameState = this.makeMove(this.gameState, this.findBestMoveAI());
+                }
+            }
+        },
+        makeMove(gameState, index){
+            var newGameState = {
+                    grid: gameState.grid.slice(0),
+                }
+            if (this.legalMove(gameState, index)){
+                newGameState.grid.splice(index, 1, gameState.playerTurn ? "X" : "O");
+                newGameState.winner = this.checkWin(newGameState.grid);
+                newGameState.playerTurn = !gameState.playerTurn;
+            }
+            return newGameState;
+        },
+        legalMove(gameState, index){
+            return gameState.grid[index] === " ";
         },
         resetGame(){
-            console.log("grid before reset: ", this.grid);
-            this.grid = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
-            console.log("grid after reset: ", this.grid);
-            this.currentTurn = "user";
+            this.gameState = {
+                grid: [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+                playerTurn: true,
+                winner: null
+            };
+        },
+        checkWin(grid){
+            var rtn = " ";
+            for (var i = 0; i < 3; i++){
+                if (grid[i * 3] === grid[i * 3 + 1] && grid[i * 3 + 1] === grid[i * 3 + 2]){
+                    // row match
+                    rtn = grid[i * 3];
+                } else if (grid[i] === grid[i + 3] && grid[i + 3] === grid[i + 6]){
+                    // column match
+                    rtn = grid[i];
+                } 
+            }
+            if ((grid[4] === grid[0] && grid[4] === grid[8]) || (grid[4] === grid[2] && grid[4] === grid[6])){
+                // diagonal match
+                rtn = grid[4];
+            } else {
+                var blanksLeft = grid.filter(elem => elem === " ");
+                if (blanksLeft.length === 0){
+                    rtn = "draw";
+                }
+            }
+            if (rtn === " "){
+                rtn = null;
+            }
+            return rtn;
+        },
+        legalMoves(grid){
+            var indicies = [];
+            for (let i = 0; i < grid.length; i++){
+                if (grid[i] === " "){
+                    indicies.push(i);
+                }
+            }
+            return indicies;
+        },
+        findBestMoveAI(){
+            var legalmoves = this.legalMoves(this.gameState.grid);
+            var bestMove = legalmoves[0]; // assumes there is at least 1 legal move, may need to error handle this
+            var alpha = -2;
+            var beta = 2;
+            var index = 0;
+            while (index < legalmoves.length && alpha < beta){
+                var newState = this.makeMove(this.gameState, legalmoves[index]);
+                var currentScore = -this.miniMax(this.makeMove(this.gameState, legalmoves[index]), -beta, -alpha);
+                if (currentScore >= alpha){
+                    bestMove = legalmoves[index];
+                    alpha = currentScore;
+                }
+                index += 1;
+            }
+            return bestMove;
+        },
+        miniMax(gameState, alpha, beta) {
+            if (gameState.winner === null){
+                var legalmoves = this.legalMoves(gameState.grid);
+                var index = 0;
+                while (index < legalmoves.length && alpha < beta){
+                    var board = this.makeMove(gameState, legalmoves[index]);
+                    var currentScore = -this.miniMax(this.makeMove(gameState, legalmoves[index]), -beta, -alpha);
+                    if (currentScore >= alpha){
+                        alpha = currentScore;
+                    }
+                    index += 1;
+                }
+                return alpha;
+            } else if (gameState.winner == "X") {
+                return gameState.playerTurn ? 1 : -1;
+            } else if (gameState.winner === "O"){
+                return gameState.playerTurn ? -1 : 1;
+            } else if (gameState.winner === "draw"){
+                return 0;
+            } else {
+                console.log("Help!");
+            }
         }
     },
     computed:{
         info(){
-            if (this.currentTurn === "user"){
-                return "Your turn!";
-            } else if (this.currentTurn === "ai"){
-                return "Thinking...";
-            } else if (this.currentTurn === "playerWon"){
+            if (this.gameState.winner === null){
+                if (this.gameState.playerTurn){
+                    return "Your turn!";
+                } else {
+                    return "Thinking...";
+                }
+            } else if (this.gameState.winner === "X") {
                 return "Congratulations! You beat the unbeatable bot!";
-            } else if (this.currentTurn === "draw"){
-                return "It's a draw! This is the best possible outcome!";
-            } else if (this.currentTurn == "aiWon"){
+            } else if (this.gameState.winner === "O"){
                 return "You lost to the unbeatable bot!";
+            } else if (this.gameState.winner === "draw"){
+                return "It's a draw! This is the best possible outcome!";
             } else {
                 return "I've lost my train of thought, please refresh me!";
             }
