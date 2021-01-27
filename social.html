@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>David O'Donohue | Social</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+        <link rel="manifest" href="./site.webmanifest">
+        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="stylesheet" href="style.css">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://kit.fontawesome.com/02e9cf65f2.js"></script>
+        <script src="./components/navbar.js"></script>
+    </head>
+    <body>
+        <div id ='app'>
+            <nav-bar></nav-bar>
+            <div class="pageTotal">
+                <h1 class="banner">Social</h1>
+                <div class="card">
+                    <h3>Phone</h3>
+                    <a href="sms:0401609112" class="styledButton"><i class="far fa-comment"> SMS me</i></a>
+                    <button @click="copyToClipboard('0401609112')" class="styledButton"><i class="far fa-copy"> Copy my phone number</i></button>
+                    <h3>Email</h3>
+                    <a href="mailto:subjectification@gmail.com" class="styledButton"><i class="fas fa-envelope"> Email me</i></a>
+                    <button @click="copyToClipboard('subjectification@gmail.com')" class="styledButton"><i class="far fa-copy"> Copy my email address</i></button>
+                    <h3>Social</h3>
+                    <a href="whatsapp://send?text=Check out this website! www.davidodonohue.github.io" class="styledButton"><i class="far fa-paper-plane"> Share this page via WhatsApp</i></a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+
+app = new Vue({
+    el: '#app',
+    methods: {
+        copyToClipboard(text){
+            if (navigator.clipboard){
+                navigator.clipboard.writeText(text)
+                .catch(
+                    function() {
+                        console.log("Error copying to clipboard");
+                });
+            } else {
+                console.log("Clipboard API not supported on this device");
+            }  
+        }
+    },
+})
+
+</script>
+
+<style>
+    .pageTotal{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/forest.jpg");
+    }
+</style>

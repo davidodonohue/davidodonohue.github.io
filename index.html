@@ -1,58 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>David O'Donohue</title>
+        <title>David O'Donohue | Home</title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
         <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
         <link rel="manifest" href="./site.webmanifest">
         <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="stylesheet" href="style.css">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
         <script src="https://kit.fontawesome.com/02e9cf65f2.js"></script>
+        <script src="./components/navbar.js"></script>
     </head>
     <body>
         <div id ='app'>
-            <div class="navbar">
-                <a href="#About">About</a>
-                <a href="#Projects">Projects</a>
-                <a href="#Articles">Articles</a>
-                <a href="#Social">Social</a>
-            </div>
-            <div class="pageContainer">
-                <div class="pageFrame" id="About">
-                    <h1>About</h1>
-                    <div class="card">
-                        Welcome to my website! I am a father, a software engineer, and a registered psychologist with interests in weight lifting, moral philosophy, akrasia, mental health, computer science, and mathematics. I enjoy learning, reflecting, solving complex problems, building relationships, and helping others to develop.
-                    </div>
-                </div>
-                <div class="pageFrame" id="Projects">
-                    <h1>Projects</h1>
-                    <div class="card">
-                        <a href="food-check.html">Food check</a>Measure calories, protein, and cost of protein in the foods you eat.<hr>
-                        <a href="forge.apk">Forge workout tracker (unsigned android apk)</a>Plan and track your workouts, and receive recommendations based on a proprietary algorithm.<hr>
-                        <a href="fly.html">Fly</a>A flappy-bird/helicopter-inspired game I developed in order to first learn javascript. Press spacebar or tap to fly up, your aim is to go through as many of the hoops as possible.
-                    </div>
-                </div>
-                <div class="pageFrame" id="Articles">
-                    <h1>Articles</h1>
-                    <div class="card">
-                        Coming soon.
-                    </div>
-                </div>
-                <div class="pageFrame" id="Social">
-                    <div class="card">
-                        <h3>Phone</h3>
-                        <a href="sms:0401609112"><i class="far fa-comment"> SMS me</i></a>
-                        <button @click="copyToClipboard('0401609112')"><i class="far fa-copy"> Copy my phone number</i></button>
-                        <h3>Email</h3>
-                        <a href="mailto:subjectification@gmail.com"><i class="fas fa-envelope"> Email me</i></a>
-                        <button @click="copyToClipboard('subjectification@gmail.com')"><i class="far fa-copy"> Copy my email address</i></button>
-                        <h3>Social</h3>
-                        <a href="whatsapp://send?text=Check out this website! www.davidodonohue.github.io"><i class="far fa-paper-plane"> Share this page via WhatsApp</i></a>
-                    </div>
+            <nav-bar></nav-bar>
+            <div class="pageTotal">
+                <h1 class="banner">About</h1>
+                <div class="card">
+                    Welcome to my website! I am a father, a software engineer, and a registered psychologist
+                    with interests in weight lifting, virtue ethics, willpower, mental health, positive psychology, computer science,
+                    and mathematics. I enjoy learning, reflecting, solving complex problems, building relationships,
+                    and helping others to develop.
                 </div>
             </div>
         </div>
@@ -63,186 +35,12 @@
 
 app = new Vue({
     el: '#app',
-    data() {
-        return {
-        }
-    },
-    methods: {
-        copyToClipboard(text){
-            if (navigator.clipboard){
-                navigator.clipboard.writeText(text)
-                .catch(
-                    function() {
-                        console.log("Error copying to clipboard");
-                });
-            } else {
-                console.log("Clipboard API not supported on this device");
-            }  
-        }
-    },
 })
 
 </script>
 
 <style>
-
-:root{
-    --bigImgMaxWidth: 60vw;
-    --bigImgMaxHeight: 60vh;
-    --smallImgMaxWidth: 45vw;
-    --smallImgMaxHeight: 45vh;
-    --headerHeight: 40px;
-    --lightColour: whitesmoke;
-    --darkColour: darkslategrey
-}
-
-* {
-    padding: 0;
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-family: Arial, Helvetica, sans-serif;
-
-}
-
-.navbar {
-  position: sticky;
-  z-index: 9;
-  top: 0;
-  width: 100%;
-  height: var(--headerHeight);
-  background: dimgray;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.navbar a{
-    color: var(--lightColour);
-    border: none;
-    margin: 5px;
-    font-size: 16px;
-    text-decoration: none;
-    flex-grow: 1;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.card a, .card button {
-    color: var(--darkColour);
-    border: solid black;
-    padding: 1vh 1vw;
-    margin: 1vh 1vw;
-    font-size: 16px;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--lightColour);
-    cursor: pointer;
-    transition-duration: 0.4s;
-}
-
-.card a:hover, .card button:hover {
-    color: var(--lightColour);
-    background-color: black;
-}
-
-.navbar a:hover {
-    color:black;
-    background-color: grey;
-}
-
-.pageContainer {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: calc(100vh - var(--headerHeight));
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    scroll-behavior: smooth;
-    color: var(--lightColour);
-}
-
-.pageFrame {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    height: calc(100vh - var(--headerHeight));
-    width: 100%;
-    text-align: center;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
-    background-size:cover;
-    background-repeat:no-repeat;
-    background-attachment:fixed;
-    background-position:center top;
-}
-
-h1{
-    animation-name: textAnimation;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    background-color: black;
-    border: solid gray;
-    padding: 3vh 3vw;
-    text-transform: uppercase;
-}
-
-@keyframes textAnimation{
-    from {filter: blur(8px);}
-    to {filter: blur(0px);}
-}
-
-#About {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/thai.jpg");
-}
-
-#Projects{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/lowes.jpg");
-}
-
-#Articles {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/dinner.jpg");
-}
-
-#Social {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/daycare.jpg");
-}
-
-.card {
-    background: var(--lightColour);
-    color: var(--darkColour);
-    border-radius: 20px;
-    padding: 5vh 5vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    max-width: 60vw;
-    max-height: 50vh;
-    overflow: auto;
-    flex-wrap: wrap;
-}
-
-i.fas, i.far {
-    font-weight: 400;
-}
-
-.card button {
-    margin: 1vh 1vw;
-}
-
-.card h3 {
-    margin: 1vh 1vw;
-}
-
-hr {
-    min-width: 90%;
-    margin: 2vh 1vw;
-}
-
+    .pageTotal{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/thai.jpg");
+    }
 </style>
