@@ -1,15 +1,22 @@
-.pageTotal {
+.pageTile {
     width: 100%;
-    min-height: 95vh;
     text-align: center;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     flex-direction: column;
+}
+
+
+#app {
     background-size:cover;
     background-repeat:no-repeat;
     background-attachment:fixed;
     background-position:center top;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card {
@@ -58,7 +65,8 @@
     padding: 3vh 3vw;
     text-transform: uppercase;
     color: white;
-    margin: 1vh 1vw;
+    margin: 2vh 2vw;
+    font-size: x-large;
 }
 
 hr {
@@ -74,8 +82,8 @@ hr {
 * {
     padding: 0;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, sans-serif;
+    font-size: large;
 }
 
 .navbar {
@@ -83,17 +91,17 @@ hr {
     z-index: 9;
     top: 0;
     width: 100%;
-    height: 5vh;
     background: dimgray;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .navbar a{
     color: white;
     border: none;
-    margin: 5px;
+    padding: 10px;
     font-size: 16px;
     text-decoration: none;
     flex-grow: 1;
@@ -115,10 +123,12 @@ i.fas, i.far {
 .article p {
     text-align: justify;
     text-justify: inter-character;
+    margin: 2vh 0;
 }
 
 .heading{
     margin: 1vh 1vw;
+    font-size: x-large;
 }
 
 .quote {

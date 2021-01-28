@@ -18,8 +18,10 @@
     <body>
         <div id ='app'>
             <nav-bar></nav-bar>
-            <div class="pageTotal">
+            <div class="pageTile">
                 <h1 class="banner">Quotes</h1>
+            </div>
+            <div class="pageTile">
                 <div class="card">
                     Here are some quotes and poems that I have found helpful or insightful.<br><br>
                     <figure class="quote">
@@ -29,6 +31,7 @@
                     <div style="display: flex; flex-direction: row;"><button @click="decrement" class="styledButton">Previous quote</button><button @click="random" class="styledButton">Random quote</button><button @click="increment" class="styledButton">Next quote</button></div>
                 </div>
             </div>
+            <div></div>
         </div>
     </body>
 </html>
@@ -44,18 +47,18 @@ app = new Vue({
 {quote: "I judge you unfortunate because you have never lived through misfortune. You have passed through life without an opponent — no one can ever know what you are capable of, not even you.", author: "Seneca"},
 {quote: "He has the most who is content with the least.", author: "Diogenes"},
 {quote: "To bear trials with a calm mind robs misfortune of its strength and burden.", author: "Seneca"},
-{quote: "A gem cannot be polished without friction, nor a man without trials.", author: "Seneca" },
+{quote: "A gem cannot be polished without friction, nor a man (or woman!) without trials.", author: "Seneca" },
 {quote: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
 {quote: "Sometimes even to live is an act of courage.", author: "Seneca" },
 {quote: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
 {quote: "Life is very short and anxious for those who forget the past, neglect the present, and fear the future.", author: "Seneca" },
 {quote: "Nothing is more honorable than a grateful heart.", author: "Seneca" },
-{quote: "No man is crushed by misfortune unless he has first been deceived by prosperity.", author: "Seneca" },
+{quote: "No man (or woman!) is crushed by misfortune unless he has first been deceived by prosperity.", author: "Seneca" },
 {quote: "If what you have seems insufficient to you, then though you possess the world, you will yet be miserable.", author: "Seneca" },
 {quote: "Let us greedily enjoy our friends, because we do not know how long this privilege will be ours.", author: "Seneca" },
 {quote: "Those who have a 'why' to live, can bear almost any 'how'.", author: "Nietzsche" },
 {quote: "The effort to feel happy is often precisely the thing that makes us miserable. And that it is out constant efforts to eliminate the negative - insecurity, uncertainty, failure, or sadness - that is what causes us to feel so insecure, anxious, uncertain, or unhappy.", author: "Burkeman" },
-{quote: "True happiness is to enjoy the present, without anxious dependence upon the future, not to amuse ourselves with either hopes or fears but to rest satisfied with what we have, which is sufficient, for he that is so wants nothing. The greatest blessings of mankind are within us and within our reach. A wise man is content with his lot, whatever it may be, without wishing for what he has not.", author: "Seneca" },
+{quote: "True happiness is to enjoy the present, without anxious dependence upon the future, not to amuse ourselves with either hopes or fears but to rest satisfied with what we have, which is sufficient, for he that is so wants nothing. The greatest blessings of mankind are within us and within our reach. A wise man (or woman!) is content with his lot, whatever it may be, without wishing for what he has not.", author: "Seneca" },
 {quote: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
 {quote: "When you arise in the morning think of what a privilege it is to be alive, to think, to enjoy, to love.", author: "Marcus Aurelius" },
 {quote: "Very little is needed to make a happy life; it is all within yourself in your way of thinking.", author: "Marcus Aurelius" },
@@ -117,7 +120,7 @@ If neither foes nor loving friends can hurt you,
 If you can fill the unforgiving minute
     With sixty seconds’ worth of distance run,   
 Yours is the Earth and everything that’s in it,   
-    And—which is more—you’ll be a Man, my son!`, author: "If - Rudyard Kipling" },
+    And—which is more—you’ll be a Man (or Woman!), my son!`, author: "If - Rudyard Kipling" },
             ],
             currentIndex: 0
         }
@@ -152,7 +155,7 @@ Yours is the Earth and everything that’s in it,
 </script>
 
 <style>
-    .pageTotal{
+    #app {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/kids.jpg");
     }
 </style>
