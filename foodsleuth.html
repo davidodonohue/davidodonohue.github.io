@@ -13,7 +13,6 @@
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
         <script src="./components/SavedFood.js"></script>
         <script src="./components/MixFood.js"></script>
-        <link href="./assets/css/all.css" rel="stylesheet">
     </head>
     <body>
         <div id ='app'>
@@ -32,7 +31,7 @@
                 <input type='number' v-model='mixData.userBodyWeight' placeholder='Bodyweight in kgs' /><br>
                 <span>Target protein per day: {{targetProteinDay ? Math.round(targetProteinDay) : 'Enter bodyweight to calculate'}}<br></span>
                 <input type='number' v-model='mixData.userMealsPerDay' placeholder='Meals per day' /><br>
-                <span>Target protein per meal: {{targetProteinMeal ? Math.round(targetProteinMeal) : 'Enter bodyweight and number of meals per day to calculate'}}<br></span>
+                <span>Cumulative target protein per meal: {{targetProteinMeals ? targetProteinMeals : 'Enter bodyweight and number of meals per day to calculate'}}<br></span>
                 Mixer contains:<br>
                 {{Math.round(mixCalories)}} calories<br>
                 {{Math.round(mixProtein)}} grams of protein<br>
@@ -45,12 +44,13 @@
                 <button @click="saveNewFood" class='save'><i class="far fa-save"></i> Save mixer as new food</button>
             </div>
             <hr>
+            <input type="text" v-model="searchString" placeholder="Filter" />
             Sort food by: <select v-model="sortBy">
                 <option>Percent protein</option>
                 <option>Cost of protein</option>
                 <option>Caloric density</option>
             </select>
-            <saved-food class="savedFood" v-for="(elem, index) in savedFood" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-mix="addMix" :hr="index != savedFood.length - 1"></saved-food>
+            <saved-food class="savedFood" v-for="(elem, index) in filteredList" :data="elem" :index="index" @remove="remove" @edit="edit" @add-to-mix="addMix" :hr="index != filteredList.length - 1"></saved-food>
             <button @click="toggleFibre" class='edit'>Toggle fibre</button>
         </div>
     </body>
@@ -63,6 +63,8 @@ app = new Vue({
         data () {
             return {
                 savedFood: [],
+                searchString: "",
+                filteredList: [],
                 sortBy: null,
                 inputData: {
                     carbsPer100g: null,
@@ -194,6 +196,7 @@ app = new Vue({
             if (localStorage.fibreEnabled){
                 this.fibreEnabled = localStorage.fibreEnabled == 'true';
             }
+            this.filteredList = this.savedFood;
         },
         computed: {
             proteinPercent: function() {
@@ -304,8 +307,17 @@ app = new Vue({
             targetProteinDay: function(){
                 return this.mixData.userBodyWeight ? (this.mixData.userBodyWeight * 1.6) : null;
             },
-            targetProteinMeal: function (){
-                return this.mixData.userMealsPerDay ? (this.targetProteinDay / this.mixData.userMealsPerDay) : null;
+            targetProteinMeals: function (){
+                var rtn = null;
+                if (this.mixData.userMealsPerDay) {
+                    rtn = [];
+                    var mealProtein = Math.round(this.targetProteinDay / this.mixData.userMealsPerDay);
+                    for (let i = 0; i < this.mixData.userMealsPerDay; i++){
+                        rtn.push(mealProtein * (i + 1));
+                    }
+                    rtn = rtn.join(", ");
+                }
+                return rtn;
             }
         },
         watch: {
@@ -313,6 +325,13 @@ app = new Vue({
                 this.sortList();
                 this.updateStorage();
             },
+            searchString: function(n, o){
+                if (n === ""){
+                    this.filteredList = this.savedFood;
+                } else {
+                    this.filteredList = this.savedFood.filter(obj => obj.name.includes(n));
+                }
+            }
         }
     });
 
@@ -500,7 +519,7 @@ app = new Vue({
     }
 
     .component-fade-enter-active, .component-fade-leave-active {
-        transition: all 1s ease;
+        transition: all 0.4s ease;
     }
     .component-fade-enter, .component-fade-leave-to {
         opacity: 0;
