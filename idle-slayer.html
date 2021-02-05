@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Slayer Can I Idle This?</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+        <link rel="manifest" href="./site.webmanifest">
+        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="stylesheet" href="idle/style.css">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="idle/style.css">
+    </head>
+    <body>
+        <div id ='app'>
+            <h1 class="text-white text-center my-4">Slayer Can I Idle This?</h1>
+
+            <div class="row">
+                <div class="col-4 col-md  text-white text-center font-weight-bold my-4">
+                    <label>Slayer Difficulty Level</label>
+                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="SlayerLevel">
+                        <option>Easy</option>
+                        <option>Normal</option>
+                        <option>Hard</option>
+                        <option>Elite</option>
+                        <option>Master</option>
+                    </select>
+                </div>
+                <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
+                    <label>Total Health</label>
+                    <input v-model="TotalHealth" type="number" class="form-control p-3" min="100" max="1030" value="100" step="10" />
+                </form>
+                <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
+                    <label>Current DR%</label>
+                    <input v-model="CurrentDR" type="number" class="form-control p-3" min="0" max="87" value="0" />
+                </form>
+                <div class="col-4 col-md  text-white text-center font-weight-bold my-4">
+                    <label>AutoEat Level</label>
+                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="AutoEatLevel">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+                <div class="col-4 col-md dropdown text-white text-center font-weight-bold my-4">
+                    <label>Combat Style</label>
+                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="CombatStyle">
+                        <option>Melee</option>
+                        <option>Ranged</option>
+                        <option>Magic</option>
+                    </select>
+                </div>
+                <div class="col-4 col-md dropdown text-white text-center font-weight-bold my-4">
+                    <label>Game Mode</label>
+                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="GameMode">
+                        <option>Normal</option>
+                        <option>Hardcore</option>
+                    </select>
+                </div>
+            </div> 
+            <div class="tab-pane fade active show">
+                <table class="monster-table table table-responsive-md table-striped table-dark table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 11%" scope="col">
+                            <div data-toggle="tooltip" data-placement="top" title="Total DR% you need equipt to safely idle this monster with your currently set HP"><u>DR% Needed</u></div>
+                            </th>
+                            <th style="width: 11%" scope="col">
+                            <div data-toggle="tooltip" data-placement="top" title="Total HP you need to safely idle this monster with your currently set DR%"><u>HP Needed</u></div>
+                            </th>
+                            <th style="width: 20%" scope="col">Monster Name</th>
+                            <th style="width: 11%" scope="col">Style</th>
+                            <th style="width: 11%" scope="col">Max Hit</th>
+                            <th style="width: 11%" scope="col">Reduced Max hit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="monster in monsters.filter(m => m.slayerLevel == this.SlayerLevel)" :class="{idleable : isIdleable(monster)}">
+                            <td>{{minDR(monster)}}</td>
+                            <td>{{minHP(monster)}}</td>
+                            <td>{{monster.name}}</td>
+                            <td>{{monster.attackStyle}}</td>
+                            <td>{{monster.maxHit}}</td>
+                            <td>{{reducedMaxHit(monster)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-white text-center my-1 mx-auto">
+                <p>Styling and formulas used are from the original "Can I Idle This?" website: <a href="https://drboomtown.github.io/">https://drboomtown.github.io/</a></p>
+                <p><a href="mailto:subjectification@gmail.com">email me</a> with any errors or complaints.</p>
+              </div>
+        </div>
+    </body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+<script>
+
+app = new Vue({
+    el: '#app',
+    data() {
+        return {
+            SlayerLevel: "Easy",
+            TotalHealth: 100,
+            CurrentDR: 0,
+            AutoEatLevel: "1",
+            CombatStyle: "Melee",
+            GameMode: "Normal",
+            monsters: [
+                {
+                    name: "Black Knight",
+                    attackStyle: "Melee",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Hill Giant",
+                    attackStyle: "Melee",
+                    maxHit: 53,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Giant Crab",
+                    attackStyle: "Melee",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Tentacle",
+                    attackStyle: "Melee",
+                    maxHit: 34,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Seagull",
+                    attackStyle: "Melee",
+                    maxHit: 23,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Confused Pirate",
+                    attackStyle: "Melee",
+                    maxHit: 46,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Frozen Archer",
+                    attackStyle: "Ranged",
+                    maxHit: 75,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Mummy",
+                    attackStyle: "Melee",
+                    maxHit: 49,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Statue",
+                    attackStyle: "Melee",
+                    maxHit: 58,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Wet Monster",
+                    attackStyle: "Melee",
+                    maxHit: 74,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Moist Monster",
+                    attackStyle: "Melee",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Sweaty Monster",
+                    attackStyle: "Melee",
+                    maxHit: 46,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Many Eyed Monster",
+                    attackStyle: "Ranged",
+                    maxHit: 92,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Lots of Eyes",
+                    attackStyle: "Melee",
+                    maxHit: 68,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Fairy",
+                    attackStyle: "Magic",
+                    maxHit: 170,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Goo Monster",
+                    attackStyle: "Melee",
+                    maxHit: 34,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Green Goo Monster",
+                    attackStyle: "Melee",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Golbin",
+                    attackStyle: "Melee",
+                    maxHit: 23,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Ranged Golbin",
+                    attackStyle: "Ranged",
+                    maxHit: 27,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Chicken",
+                    attackStyle: "Melee",
+                    maxHit: 11,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Cow",
+                    attackStyle: "Melee",
+                    maxHit: 18,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Junior Farmer",
+                    attackStyle: "Melee",
+                    maxHit: 27,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Adult Farmer",
+                    attackStyle: "Melee",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Master Farmer",
+                    attackStyle: "Melee",
+                    maxHit: 67,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Wizard",
+                    attackStyle: "Magic",
+                    maxHit: 120,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Steel Knight",
+                    attackStyle: "Melee",
+                    maxHit: 32,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Mithril Knight",
+                    attackStyle: "Melee",
+                    maxHit: 52,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Bandit Trainee",
+                    attackStyle: "Ranged",
+                    maxHit: 42,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Bandit",
+                    attackStyle: "Ranged",
+                    maxHit: 82,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Plant",
+                    attackStyle: "Melee",
+                    maxHit: 11,
+                    slayerLevel: "Easy"
+                },
+                {
+                    name: "Moss Giant",
+                    attackStyle: "Melee",
+                    maxHit: 124,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Frozen Mammoth",
+                    attackStyle: "Melee",
+                    maxHit: 142,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Stone Snake",
+                    attackStyle: "Magic",
+                    maxHit: 120,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Undead Werewolf",
+                    attackStyle: "Melee",
+                    maxHit: 77,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Vampire",
+                    attackStyle: "Ranged",
+                    maxHit: 105,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Strange Eyed Monster",
+                    attackStyle: "Melee",
+                    maxHit: 87,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Eyes",
+                    attackStyle: "Melee",
+                    maxHit: 125,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Valkyrie",
+                    attackStyle: "Melee",
+                    maxHit: 116,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Angel",
+                    attackStyle: "Magic",
+                    maxHit: 190,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Holy Archer",
+                    attackStyle: "Ranged",
+                    maxHit: 177,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Purple Goo Monster",
+                    attackStyle: "Melee",
+                    maxHit: 63,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Scattered Goo Monster",
+                    attackStyle: "Melee",
+                    maxHit: 103,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Green Dragon",
+                    attackStyle: "Melee",
+                    maxHit: 143,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Blue Dragon",
+                    attackStyle: "Melee",
+                    maxHit: 168,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Adamant Knight",
+                    attackStyle: "Melee",
+                    maxHit: 118,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Master Wizard",
+                    attackStyle: "Magic",
+                    maxHit: 170,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Druid",
+                    attackStyle: "Magic",
+                    maxHit: 81,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Thief",
+                    attackStyle: "Ranged",
+                    maxHit: 117,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Shaman",
+                    attackStyle: "Magic",
+                    maxHit: 137,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Turkul Riders",
+                    attackStyle: "Melee",
+                    maxHit: 82,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Turkul Archers",
+                    attackStyle: "Ranged",
+                    maxHit: 112,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Turkul Throwers",
+                    attackStyle: "Melee",
+                    maxHit: 132,
+                    slayerLevel: "Normal"
+                },
+                {
+                    name: "Fierce Devil",
+                    attackStyle: "Melee",
+                    maxHit: 128,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Griffin",
+                    attackStyle: "Melee",
+                    maxHit: 128,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Pegasus",
+                    attackStyle: "Melee",
+                    maxHit: 264,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Raging Horned Elite",
+                    attackStyle: "Melee",
+                    maxHit: 146,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Seething Horned Elite",
+                    attackStyle: "Melee",
+                    maxHit: 243,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Red Dragon",
+                    attackStyle: "Melee",
+                    maxHit: 212,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Black Dragon",
+                    attackStyle: "Melee",
+                    maxHit: 268,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Rune Knight",
+                    attackStyle: "Melee",
+                    maxHit: 212,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Turkul Giant",
+                    attackStyle: "Melee",
+                    maxHit: 192,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Paladin",
+                    attackStyle: "Melee",
+                    maxHit: 163,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Dark Wizard",
+                    attackStyle: "Magic",
+                    maxHit: 210,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Necromancer",
+                    attackStyle: "Magic",
+                    maxHit: 163,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Elementalist",
+                    attackStyle: "Magic",
+                    maxHit: 240,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Priest",
+                    attackStyle: "Magic",
+                    maxHit: 213,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Turkul General",
+                    attackStyle: "Ranged",
+                    maxHit: 202,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Sand Beast",
+                    attackStyle: "Ranged",
+                    maxHit: 260,
+                    slayerLevel: "Hard"
+                },
+                {
+                    name: "Dark Horned Elite",
+                    attackStyle: "Melee",
+                    maxHit: 443,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Bounty Hunter",
+                    attackStyle: "Melee",
+                    maxHit: 329,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Cursed Maiden",
+                    attackStyle: "Magic",
+                    maxHit: 450,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Furious Horned Elite",
+                    attackStyle: "Ranged",
+                    maxHit: 397,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Rancora Spider",
+                    attackStyle: "Ranged",
+                    maxHit: 450,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Elder Vampire",
+                    attackStyle: "Ranged",
+                    maxHit: 400,
+                    slayerLevel: "Elite"
+                },
+                {
+                    name: "Chaotic Greater Demon",
+                    attackStyle: "Melee",
+                    maxHit: 600,
+                    slayerLevel: "Master"
+                },
+                {
+                    name: "Umbora",
+                    attackStyle: "Melee",
+                    maxHit: 930,
+                    slayerLevel: "Master"
+                },
+                {
+                    name: "Wicked Greater Demon",
+                    attackStyle: "Magic",
+                    maxHit: 240,
+                    slayerLevel: "Master"
+                },
+                {
+                    name: "Ku-tul",
+                    attackStyle: "Magic",
+                    maxHit: 970,
+                    slayerLevel: "Master"
+                },
+                {
+                    name: "Hunting Greater Demon",
+                    attackStyle: "Ranged",
+                    maxHit: 600,
+                    slayerLevel: "Master"
+                },
+                {
+                    name: "Rokken",
+                    attackStyle: "Ranged",
+                    maxHit: 1235,
+                    slayerLevel: "Master"
+                },
+            ]
+        }
+    },
+    methods: {
+        isIdleable(monster){
+            return this.minDR(monster) <= this.CurrentDR;
+        },
+        minDR(monster){
+            return Math.max(0, Math.ceil(Math.ceil(100 - this.TotalHealth / monster.maxHit * (100 * this.autoEatThreshold)) / this.combatTriangle[this.getCombatStyle(this.CombatStyle)][this.getCombatStyle(monster.attackStyle)]));
+        },
+        reducedMaxHit(monster){
+            return monster.maxHit - Math.floor(monster.maxHit * (Math.floor(this.CurrentDR * this.combatTriangle[this.getCombatStyle(this.CombatStyle)][this.getCombatStyle(monster.attackStyle)])) / 100);
+        },
+        minHP(monster){
+            return Math.max(100, Math.ceil((monster.maxHit - Math.floor(monster.maxHit * (Math.floor(this.CurrentDR * this.combatTriangle[this.getCombatStyle(this.CombatStyle)][this.getCombatStyle(monster.attackStyle)])) / 100)) / this.autoEatThreshold / 10) * 10);
+        },
+        getCombatStyle(style){
+            switch (style) {
+                case "Melee":
+                    return 0;
+                case "Ranged":
+                    return 1;
+                case "Magic":
+                    return 2;
+            }
+        }
+    },
+    computed: {
+        autoEatThreshold(){
+            switch (this.AutoEatLevel) {
+                case "0":
+                    return 0;
+                case "1":
+                    return 0.2;
+                case "2":
+                    return 0.3;
+                case "3":
+                    return 0.4;
+            }
+        },
+        combatTriangle(){
+            if(this.GameMode === "Normal"){
+                return [[1, 1.25, 0.5], [0.95, 1, 1.25], [1.25, 0.85, 1]];
+            } else {
+                return [[1, 1.25, 0.25], [0.75, 1, 1.25], [1.25, 0.75, 1]];
+            }
+        },
+    }
+})
+
+</script>
+
+<style>
+#app {
+    padding: 5vh 5vw;
+}
+</style>

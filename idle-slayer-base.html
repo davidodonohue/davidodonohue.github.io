@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="idle/style.css">
+        <title>Can I Idle This?</title>
+
+        
+
+        </head>
+    <body>
+        
+        <div class="container mx-auto">
+          
+            <nav>
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" id="tab1"><span id="tab1" class="text">Can i Idle This?</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab2"><span id="tab2" class="text">Dungeon Breakdown</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab3"><span id="tab3" class="text">Mysterious third tab</span></a>
+                </li>
+              </ul>
+            </nav>
+
+            <div class="tab-content">
+              <div class="tab-pane fade active show" id="nav-inputs">       
+                  
+                <h1 class="text-white text-center my-4">Can I Idle This?</h1>
+              
+                <div class="row">
+                    <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
+                        <label for="TotalHealth">Total Health</label>
+                        <input id="currHealth" type="number" name="TotalHealth" class="health-input form-control p-3" min="0" max="1030" value="100" step="10">
+                    </form>
+                    <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
+                        <label for="TotalDR">Current DR%</label>
+                        <input id="currDR" type="number" name="TotalDR" class=" form-control p-3" min="0" max="87" value="0">
+                    </form>
+                    <div class="col-4 col-md dropdown text-white text-center font-weight-bold my-4">
+                        <label class="label-w" for="autoEatLevel">AutoEat Level</label>
+                        <button class="btn btn-secondary dropdown-toggle form-control" type="button" id="autoEatDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          1
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="autoEatDropDown">
+                          <a class="dropdown-item" href="#">1</a>
+                          <a class="dropdown-item" href="#">2</a>
+                          <a class="dropdown-item" href="#">3</a>
+                        </div>
+                      </div>
+                      <div class="col-4 col-md dropdown text-white text-center font-weight-bold my-4">
+                        <label class="label-w" for="combatStyle">Combat Style</label>
+                        <button class="btn btn-secondary dropdown-toggle form-control" type="button" id="combatStyleDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Melee
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="combatStyleDropDown">
+                          <a class="dropdown-item" href="#">Melee</a>
+                          <a class="dropdown-item" href="#">Ranged</a>
+                          <a class="dropdown-item" href="#">Magic</a>
+                        </div>
+                      </div>
+                      <div class="col-4 col-md dropdown text-white text-center font-weight-bold my-4">
+                        <label class="label-w" for="gameMode">Game Mode</label>
+                        <button class="btn btn-secondary dropdown-toggle form-control" type="button" id="gameModeDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Normal
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="gameModeDropDown">
+                          <a class="dropdown-item" href="#">Normal</a>
+                          <a class="dropdown-item" href="#">Hardcore</a>
+
+                        </div>
+                      </div>
+                  </div> 
+                </div>
+                  
+                  <div class="tab-pane fade active show" id="nav-dungeonTable">
+
+                    <table class="dungeon-table table table-responsive-md table-striped table-dark table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th style="width: 11%" scope="col">
+                            <div data-toggle="tooltip" data-placement="top" title="Total DR% you need equipt to safely idle this dungeon with your currently set HP"><u>DR% Needed</u></div>
+                          </th>
+                          <th style="width: 11%" scope="col">
+                            <div data-toggle="tooltip" data-placement="top" title="Total HP you need to safely idle this dungeon with your currently set DR%"><u>HP Needed</u></div>
+                          </th>
+                          <th style="width: 15%" scope="col">Dungeon</th>
+                          <th style="width: 20%" scope="col">Toughest Foe</th>
+                          <th style="width: 11%" scope="col">Style</th>
+                          <th style="width: 11%" scope="col">Max Hit</th>
+                          <th style="width: 11%" scope="col">Reduced Max hit</th>
+                        </tr>
+                      </thead>
+                    </table>
+
+
+                    <div class="text-white text-center">
+                      <button class="btn btn-secondary" type="button" id="shareButton" data-toggle="popover" data-placement="top" data-content="Link Copied to Clipboard">Copy Link with Current Settings</button>
+                    </div>
+
+                    <div class="row">
+
+                      <table style="height: 100px; width: 180px;" class="player-table table table-striped table-dark table-bordered table-hover table-sm mx-auto">
+                        <thead>
+                          <tr>
+                            <th colspan="2" scope="col" class="text-white text-center">Player Stats</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td scope="row">AutoEat Threshold</th>
+                            <td style="width: 25%;">0</td>
+                          </tr>
+                          <tr>
+                            <td scope="row">Vs Melee DR%</th>
+                            <td>0</td>
+                          </tr>
+                          <tr>
+                            <td scope="row">Vs Ranged DR%</th>
+                            <td>0</td>
+                          </tr>
+                          <tr>
+                            <td scope="row">Vs Magic DR%</th>
+                            <td>0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div class="text-white text-center my-1 mx-auto">
+                        <p>Current for Melvor Idle Version ALPHA V0.17.</p>
+                        <p>DM Drboomtown#0982 on Discord for any complaints.</p>
+                        <p>I am not liable for any deaths or lost items that may occur from trusting this page.</p>
+                        <p>Thanks to Breindhal and Visua for all their help.</p>
+                      </div>
+                    </div>
+                  </div>
+              <div class="tab-pane fade" id="nav-monsterTable">
+
+                <input class="form-control input-field my-1" id="myInput" type="text" placeholder="Search..">
+
+                <table class="monster-table table table-responsive-md table-striped table-dark table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th style="width: 11%" scope="col">
+                        <div data-toggle="tooltip" data-placement="top" title="Total DR% you need equipt to safely idle this monster with your currently set HP"><u>DR% Needed</u></div>
+                      </th>
+                      <th style="width: 11%" scope="col">
+                        <div data-toggle="tooltip" data-placement="top" title="Total HP you need to safely idle this monster with your currently set DR%"><u>HP Needed</u></div>
+                      </th>
+                      <th style="width: 15%" scope="col">Dungeon</th>
+                      <th style="width: 20%" scope="col">Monster Name</th>
+                      <th style="width: 11%" scope="col">Style</th>
+                      <th style="width: 11%" scope="col">Max Hit</th>
+                      <th style="width: 11%" scope="col">Reduced Max hit</th>
+                    </tr>
+                  </thead>
+
+                </table>
+              </div>
+              <div class="tab-pane fade" id="nav-tab3">
+                <h1 class="text-white text-center  my-4">You nosy bugger</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script src="idle/constants.js"></script>
+        <script src="idle/dungeons.js"></script>
+        <script src="idle/app.js"></script>
+    </body>
+</html> 

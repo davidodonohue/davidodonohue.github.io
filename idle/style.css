@@ -1,0 +1,93 @@
+body{
+    background: #2A1B44;
+    letter-spacing: 0.05em;
+    font-size: 0.8em;
+}
+
+u {    
+  border-bottom: 1px dotted white;
+  text-decoration: none;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.idleable{
+    background-color: #28a7452e!important;
+}
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+  
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.popover {
+    /* width: 120px; */
+    background-color: #000000e0;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+}
+
+.popover-body {
+  padding: .5rem .75rem;
+  color: white;
+}
+
+.popover .arrow:after {
+  border-top-color: #000000e0;
+}
+
+.btn-hardcore{
+  background-color: #7d0101;
+}
+
+.label-w {
+  width: 100%;
+}
+@media screen and (max-width: 400px) {
+  .label-w { width:50px; }
+}
+
+.nav-tabs .nav-link.active {
+  color: #ffffff;
+  background-color: #2a1b44;
+  border-color: #ffffff #ffffff #2a1b44;
+}
+
+.nav-link .text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-tabs .nav-item {
+  margin-bottom: -1px;
+  max-width: 33%;
+}
