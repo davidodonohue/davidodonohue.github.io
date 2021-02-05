@@ -22,8 +22,8 @@
 
             <div class="row">
                 <div class="col-4 col-md  text-white text-center font-weight-bold my-4">
-                    <label>Slayer Difficulty Level</label>
-                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="SlayerLevel">
+                    <label>Slayer Tier</label>
+                    <select class="btn btn-secondary dropdown-toggle form-control" v-model="SlayerTier">
                         <option>Easy</option>
                         <option>Normal</option>
                         <option>Hard</option>
@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="monster in monsters.filter(m => m.slayerLevel == this.SlayerLevel)" :class="{idleable : isIdleable(monster)}">
+                        <tr v-for="monster in monsters.filter(m => m.slayerTier == this.SlayerTier)" :class="{idleable : isIdleable(monster)}">
                             <td>{{minDR(monster)}}</td>
                             <td>{{minHP(monster)}}</td>
                             <td>{{monster.name}}</td>
@@ -109,7 +109,7 @@ app = new Vue({
     el: '#app',
     data() {
         return {
-            SlayerLevel: "Easy",
+            SlayerTier: "Easy",
             TotalHealth: 100,
             CurrentDR: 0,
             AutoEatLevel: "1",
@@ -120,481 +120,481 @@ app = new Vue({
                     name: "Black Knight",
                     attackStyle: "Melee",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Hill Giant",
                     attackStyle: "Melee",
                     maxHit: 53,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Giant Crab",
                     attackStyle: "Melee",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Tentacle",
                     attackStyle: "Melee",
                     maxHit: 34,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Seagull",
                     attackStyle: "Melee",
                     maxHit: 23,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Confused Pirate",
                     attackStyle: "Melee",
                     maxHit: 46,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Frozen Archer",
                     attackStyle: "Ranged",
                     maxHit: 75,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Mummy",
                     attackStyle: "Melee",
                     maxHit: 49,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Statue",
                     attackStyle: "Melee",
                     maxHit: 58,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Wet Monster",
                     attackStyle: "Melee",
                     maxHit: 74,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Moist Monster",
                     attackStyle: "Melee",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Sweaty Monster",
                     attackStyle: "Melee",
                     maxHit: 46,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Many Eyed Monster",
                     attackStyle: "Ranged",
                     maxHit: 92,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Lots of Eyes",
                     attackStyle: "Melee",
                     maxHit: 68,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Fairy",
                     attackStyle: "Magic",
                     maxHit: 170,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Goo Monster",
                     attackStyle: "Melee",
                     maxHit: 34,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Green Goo Monster",
                     attackStyle: "Melee",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Golbin",
                     attackStyle: "Melee",
                     maxHit: 23,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Ranged Golbin",
                     attackStyle: "Ranged",
                     maxHit: 27,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Chicken",
                     attackStyle: "Melee",
                     maxHit: 11,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Cow",
                     attackStyle: "Melee",
                     maxHit: 18,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Junior Farmer",
                     attackStyle: "Melee",
                     maxHit: 27,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Adult Farmer",
                     attackStyle: "Melee",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Master Farmer",
                     attackStyle: "Melee",
                     maxHit: 67,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Wizard",
                     attackStyle: "Magic",
                     maxHit: 120,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Steel Knight",
                     attackStyle: "Melee",
                     maxHit: 32,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Mithril Knight",
                     attackStyle: "Melee",
                     maxHit: 52,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Bandit Trainee",
                     attackStyle: "Ranged",
                     maxHit: 42,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Bandit",
                     attackStyle: "Ranged",
                     maxHit: 82,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Plant",
                     attackStyle: "Melee",
                     maxHit: 11,
-                    slayerLevel: "Easy"
+                    slayerTier: "Easy"
                 },
                 {
                     name: "Moss Giant",
                     attackStyle: "Melee",
                     maxHit: 124,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Frozen Mammoth",
                     attackStyle: "Melee",
                     maxHit: 142,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Stone Snake",
                     attackStyle: "Magic",
                     maxHit: 120,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Undead Werewolf",
                     attackStyle: "Melee",
                     maxHit: 77,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Vampire",
                     attackStyle: "Ranged",
                     maxHit: 105,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Strange Eyed Monster",
                     attackStyle: "Melee",
                     maxHit: 87,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Eyes",
                     attackStyle: "Melee",
                     maxHit: 125,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Valkyrie",
                     attackStyle: "Melee",
                     maxHit: 116,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Angel",
                     attackStyle: "Magic",
                     maxHit: 190,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Holy Archer",
                     attackStyle: "Ranged",
                     maxHit: 177,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Purple Goo Monster",
                     attackStyle: "Melee",
                     maxHit: 63,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Scattered Goo Monster",
                     attackStyle: "Melee",
                     maxHit: 103,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Green Dragon",
                     attackStyle: "Melee",
                     maxHit: 143,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Blue Dragon",
                     attackStyle: "Melee",
                     maxHit: 168,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Adamant Knight",
                     attackStyle: "Melee",
                     maxHit: 118,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Master Wizard",
                     attackStyle: "Magic",
                     maxHit: 170,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Druid",
                     attackStyle: "Magic",
                     maxHit: 81,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Thief",
                     attackStyle: "Ranged",
                     maxHit: 117,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Shaman",
                     attackStyle: "Magic",
                     maxHit: 137,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Turkul Riders",
                     attackStyle: "Melee",
                     maxHit: 82,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Turkul Archers",
                     attackStyle: "Ranged",
                     maxHit: 112,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Turkul Throwers",
                     attackStyle: "Melee",
                     maxHit: 132,
-                    slayerLevel: "Normal"
+                    slayerTier: "Normal"
                 },
                 {
                     name: "Fierce Devil",
                     attackStyle: "Melee",
                     maxHit: 128,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Griffin",
                     attackStyle: "Melee",
                     maxHit: 128,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Pegasus",
                     attackStyle: "Melee",
                     maxHit: 264,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Raging Horned Elite",
                     attackStyle: "Melee",
                     maxHit: 146,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Seething Horned Elite",
                     attackStyle: "Melee",
                     maxHit: 243,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Red Dragon",
                     attackStyle: "Melee",
                     maxHit: 212,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Black Dragon",
                     attackStyle: "Melee",
                     maxHit: 268,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Rune Knight",
                     attackStyle: "Melee",
                     maxHit: 212,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Turkul Giant",
                     attackStyle: "Melee",
                     maxHit: 192,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Paladin",
                     attackStyle: "Melee",
                     maxHit: 163,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Dark Wizard",
                     attackStyle: "Magic",
                     maxHit: 210,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Necromancer",
                     attackStyle: "Magic",
                     maxHit: 163,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Elementalist",
                     attackStyle: "Magic",
                     maxHit: 240,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Priest",
                     attackStyle: "Magic",
                     maxHit: 213,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Turkul General",
                     attackStyle: "Ranged",
                     maxHit: 202,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Sand Beast",
                     attackStyle: "Ranged",
                     maxHit: 260,
-                    slayerLevel: "Hard"
+                    slayerTier: "Hard"
                 },
                 {
                     name: "Dark Horned Elite",
                     attackStyle: "Melee",
                     maxHit: 443,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Bounty Hunter",
                     attackStyle: "Melee",
                     maxHit: 329,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Cursed Maiden",
                     attackStyle: "Magic",
                     maxHit: 450,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Furious Horned Elite",
                     attackStyle: "Ranged",
                     maxHit: 397,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Rancora Spider",
                     attackStyle: "Ranged",
                     maxHit: 450,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Elder Vampire",
                     attackStyle: "Ranged",
                     maxHit: 400,
-                    slayerLevel: "Elite"
+                    slayerTier: "Elite"
                 },
                 {
                     name: "Chaotic Greater Demon",
                     attackStyle: "Melee",
                     maxHit: 600,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
                 {
                     name: "Umbora",
                     attackStyle: "Melee",
                     maxHit: 930,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
                 {
                     name: "Wicked Greater Demon",
                     attackStyle: "Magic",
                     maxHit: 240,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
                 {
                     name: "Ku-tul",
                     attackStyle: "Magic",
                     maxHit: 970,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
                 {
                     name: "Hunting Greater Demon",
                     attackStyle: "Ranged",
                     maxHit: 600,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
                 {
                     name: "Rokken",
                     attackStyle: "Ranged",
                     maxHit: 1235,
-                    slayerLevel: "Master"
+                    slayerTier: "Master"
                 },
             ]
         }
