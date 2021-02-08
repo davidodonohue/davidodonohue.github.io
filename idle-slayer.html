@@ -8,7 +8,6 @@
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
         <link rel="manifest" href="./site.webmanifest">
         <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
-        <link rel="stylesheet" href="idle/style.css">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -33,11 +32,11 @@
                 </div>
                 <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
                     <label>Total Health</label>
-                    <input v-model="TotalHealth" type="number" class="form-control p-3" min="100" max="1030" value="100" step="10" />
+                    <input @wheel="wheel" v-model="TotalHealth" type="number" class="form-control p-3" min="100" max="1030" value="100" step="10" />
                 </form>
                 <form class="col-6 col-md input-field text-white text-center font-weight-bold my-4" onsubmit="return false">
                     <label>Current DR%</label>
-                    <input v-model="CurrentDR" type="number" class="form-control p-3" min="0" max="87" value="0" />
+                    <input @wheel="wheel" v-model="CurrentDR" type="number" class="form-control p-3" min="0" max="87" value="0" />
                 </form>
                 <div class="col-4 col-md  text-white text-center font-weight-bold my-4">
                     <label>AutoEat Level</label>
@@ -561,7 +560,7 @@ app = new Vue({
                     slayerTier: "Elite"
                 },
                 {
-                    name: "Chaotic Greater Demon",
+                    name: "Chaotic Greater Dragon",
                     attackStyle: "Melee",
                     maxHit: 600,
                     slayerTier: "Master"
@@ -573,7 +572,7 @@ app = new Vue({
                     slayerTier: "Master"
                 },
                 {
-                    name: "Wicked Greater Demon",
+                    name: "Wicked Greater Dragon",
                     attackStyle: "Magic",
                     maxHit: 240,
                     slayerTier: "Master"
@@ -585,7 +584,7 @@ app = new Vue({
                     slayerTier: "Master"
                 },
                 {
-                    name: "Hunting Greater Demon",
+                    name: "Hunting Greater Dragon",
                     attackStyle: "Ranged",
                     maxHit: 600,
                     slayerTier: "Master"
@@ -621,6 +620,9 @@ app = new Vue({
                 case "Magic":
                     return 2;
             }
+        },
+        wheel(){
+            // do nothing
         }
     },
     computed: {
