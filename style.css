@@ -27,6 +27,7 @@
     background-color: white;
     border-radius: 20px;
     padding: 5vh 5vw;
+    margin: 2vh 2vw;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -39,7 +40,7 @@
     color: black;
     border: solid black;
     padding: 1vh 1vw;
-    margin: 1vh 1vw;
+    margin: 0.5vh 0.5vw;
     font-size: 16px;
     text-decoration: none;
     display: flex;
