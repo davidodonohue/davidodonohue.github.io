@@ -16,7 +16,7 @@ const Quotes = Vue.component('quotes', {
 {quote: "If what you have seems insufficient to you, then though you possess the world, you will yet be miserable.", author: "Seneca" },
 {quote: "Let us greedily enjoy our friends, because we do not know how long this privilege will be ours.", author: "Seneca" },
 {quote: "Those who have a 'why' to live, can bear almost any 'how'.", author: "Nietzsche" },
-{quote: "The effort to feel happy is often precisely the thing that makes us miserable. And that it is out constant efforts to eliminate the negative - insecurity, uncertainty, failure, or sadness - that is what causes us to feel so insecure, anxious, uncertain, or unhappy.", author: "Burkeman" },
+{quote: "The effort to feel happy is often precisely the thing that makes us miserable. And that it is our constant efforts to eliminate the negative - insecurity, uncertainty, failure, or sadness - that is what causes us to feel so insecure, anxious, uncertain, or unhappy.", author: "Burkeman" },
 {quote: "True happiness is to enjoy the present, without anxious dependence upon the future, not to amuse ourselves with either hopes or fears but to rest satisfied with what we have, which is sufficient, for he that is so wants nothing. The greatest blessings of mankind are within us and within our reach. A wise man (or woman!) is content with his lot, whatever it may be, without wishing for what he has not.", author: "Seneca" },
 {quote: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
 {quote: "When you arise in the morning think of what a privilege it is to be alive, to think, to enjoy, to love.", author: "Marcus Aurelius" },

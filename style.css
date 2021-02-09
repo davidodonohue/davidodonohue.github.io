@@ -165,28 +165,28 @@ i.fas, i.far {
 
 /* mobile */
 @media (max-width: 480px) {
-    .card, .article {
+    .card, .article, .pageTile {
         max-width: 95vw;
     }
 }
 
 /* tablet */
 @media (max-width: 768px) {
-    .card, .article {
+    .card, .article, .pageTile {
         max-width: 90vw;
     }
 }
 
 /* laptop */
 @media (max-width: 1024px) {
-    .card, .article {
+    .card, .article, .pageTile {
         max-width: 80vw;
     }
 }
 
 /* desktop */
 @media (min-width: 1025px) {
-    .card, .article {
+    .card, .article, .pageTile {
         max-width: 70vw;
     }
 }
