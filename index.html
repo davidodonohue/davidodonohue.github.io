@@ -81,7 +81,7 @@ app = new Vue({
     methods: {
         randomBackground(){
             const old = this.backgroundImageIndex
-            var next = Math.floor(Math.random() * this.backgroundImages.length - 1);
+            var next = Math.floor(Math.random() * (this.backgroundImages.length - 1));
             if (next >= old){
                 next += 1;
             }
