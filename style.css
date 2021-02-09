@@ -19,6 +19,15 @@
     justify-content: space-between;
 }
 
+.background{
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    z-index: -1;
+    object-fit: cover;
+    transition: opacity 1s ease;
+}
+
 .card {
     overflow-y: scroll;
     display: flex;
@@ -60,7 +69,7 @@
     animation-name: textAnimation;
     animation-duration: 3s;
     animation-iteration-count: infinite;
-    animation-direction: alternate;
+    animation-direction: alternate-reverse;
     background-color: black;
     border: solid gray;
     padding: 3vh 3vw;
@@ -112,7 +121,8 @@ hr {
     align-items: center;
 }
 
-.navbar a:hover {
+.navbar a:hover,
+.navbar .router-link-exact-active {
     color:black;
     background-color: grey;
 }
@@ -141,8 +151,16 @@ i.fas, i.far {
     text-justify: inter-character;
     white-space: pre-line;
   }
+
 .quote cite, .quote blockquote {
     margin: 1em;
+}
+
+.component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .4s ease;
+}
+.component-fade-enter, .component-fade-leave-to {
+    opacity: 0;
 }
 
 /* mobile */

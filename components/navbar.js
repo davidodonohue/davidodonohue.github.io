@@ -2,13 +2,13 @@ const NavBar = Vue.component('nav-bar', {
     data () {
         return {
             pages: [
-                {name: "Home", url: "index.html"},
-                {name: "Treatise", url: "treatise.html"},
-                {name: "Book Reviews", url: "book-reviews.html"},
-                {name: "Projects", url: "projects.html"},
-                {name: "Quotes", url: "quotes.html"},
+                {name: "Home", url: "index.html#"},
+                {name: "Articles", url: "index.html#/articles"},
+                {name: "Book Reviews", url: "index.html#/book-reviews"},
+                {name: "Projects", url: "index.html#/projects"},
+                {name: "Quotes", url: "index.html#/quotes"},
                 {name: "YouTube", url: "https://www.youtube.com/channel/UCalf_ITbJtXeo3mWtMMVRkQ"},
-                {name: "Social", url: "social.html"},
+                {name: "Social", url: "index.html#/social"},
             ]
         }
     },

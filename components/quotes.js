@@ -1,0 +1,127 @@
+const Quotes = Vue.component('quotes', {
+    data() {
+        return {
+            // {quote: "", author: "" },
+            quotes: [
+{quote: "I judge you unfortunate because you have never lived through misfortune. You have passed through life without an opponent — no one can ever know what you are capable of, not even you.", author: "Seneca"},
+{quote: "He has the most who is content with the least.", author: "Diogenes"},
+{quote: "To bear trials with a calm mind robs misfortune of its strength and burden.", author: "Seneca"},
+{quote: "A gem cannot be polished without friction, nor a man (or woman!) without trials.", author: "Seneca" },
+{quote: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+{quote: "Sometimes even to live is an act of courage.", author: "Seneca" },
+{quote: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
+{quote: "Life is very short and anxious for those who forget the past, neglect the present, and fear the future.", author: "Seneca" },
+{quote: "Nothing is more honorable than a grateful heart.", author: "Seneca" },
+{quote: "No man (or woman!) is crushed by misfortune unless he has first been deceived by prosperity.", author: "Seneca" },
+{quote: "If what you have seems insufficient to you, then though you possess the world, you will yet be miserable.", author: "Seneca" },
+{quote: "Let us greedily enjoy our friends, because we do not know how long this privilege will be ours.", author: "Seneca" },
+{quote: "Those who have a 'why' to live, can bear almost any 'how'.", author: "Nietzsche" },
+{quote: "The effort to feel happy is often precisely the thing that makes us miserable. And that it is out constant efforts to eliminate the negative - insecurity, uncertainty, failure, or sadness - that is what causes us to feel so insecure, anxious, uncertain, or unhappy.", author: "Burkeman" },
+{quote: "True happiness is to enjoy the present, without anxious dependence upon the future, not to amuse ourselves with either hopes or fears but to rest satisfied with what we have, which is sufficient, for he that is so wants nothing. The greatest blessings of mankind are within us and within our reach. A wise man (or woman!) is content with his lot, whatever it may be, without wishing for what he has not.", author: "Seneca" },
+{quote: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
+{quote: "When you arise in the morning think of what a privilege it is to be alive, to think, to enjoy, to love.", author: "Marcus Aurelius" },
+{quote: "Very little is needed to make a happy life; it is all within yourself in your way of thinking.", author: "Marcus Aurelius" },
+{quote: "Whenever you are about to find fault with someone, ask yourself the following question: What fault of mine most nearly resembles the one I am about to criticize?", author: "Marcus Aurelius" },
+{quote: "Look well into thyself; there is a source of strength which will always spring up if thou wilt always look.", author: "Marcus Aurelius" },
+{quote: "Here is a rule to remember in future, when anything tempts you to feel bitter: not 'This is misfortune,' but 'To bear this worthily is good fortune.'", author: "Marcus Aurelius" },
+{quote: "Receive without conceit, release without struggle.", author: "Marcus Aurelius" },
+{quote: "As fire tempers gold, so does adversity temper strong men.", author: "Seneca" },
+{quote: `Out of the night that covers me,
+Black as the pit from pole to pole,
+I thank whatever gods may be
+For my unconquerable soul.
+
+In the fell clutch of circumstance
+I have not winced nor cried aloud.
+Under the bludgeonings of chance
+My head is bloody, but unbowed.
+
+Beyond this place of wrath and tears
+Looms but the Horror of the shade,
+And yet the menace of the years
+Finds and shall find me unafraid.
+
+It matters not how strait the gate,
+How charged with punishments the scroll,
+I am the master of my fate,
+I am the captain of my soul.`, author: "Invictus - William Ernest Henley" },
+{quote: `If you can keep your head when all about you   
+    Are losing theirs and blaming it on you,   
+If you can trust yourself when all men doubt you,
+    But make allowance for their doubting too;   
+If you can wait and not be tired by waiting,
+    Or being lied about, don’t deal in lies,
+Or being hated, don’t give way to hating,
+    And yet don’t look too good, nor talk too wise:
+
+If you can dream—and not make dreams your master;   
+    If you can think—and not make thoughts your aim;   
+If you can meet with Triumph and Disaster
+    And treat those two impostors just the same;   
+If you can bear to hear the truth you’ve spoken
+    Twisted by knaves to make a trap for fools,
+Or watch the things you gave your life to, broken,
+    And stoop and build ’em up with worn-out tools:
+
+If you can make one heap of all your winnings
+    And risk it on one turn of pitch-and-toss,
+And lose, and start again at your beginnings
+    And never breathe a word about your loss;
+If you can force your heart and nerve and sinew
+    To serve your turn long after they are gone,   
+And so hold on when there is nothing in you
+    Except the Will which says to them: ‘Hold on!’
+
+If you can talk with crowds and keep your virtue,   
+    Or walk with Kings—nor lose the common touch,
+If neither foes nor loving friends can hurt you,
+    If all men count with you, but none too much;
+If you can fill the unforgiving minute
+    With sixty seconds’ worth of distance run,   
+Yours is the Earth and everything that’s in it,   
+    And—which is more—you’ll be a Man (or Woman!), my son!`, author: "If - Rudyard Kipling" },
+            ],
+            currentIndex: 0
+        }
+    },
+    methods: {
+        decrement(){
+            if (this.currentIndex != 0){
+                this.currentIndex --;
+            } else {
+                this.currentIndex = this.quotes.length - 1;
+            }
+        },
+        increment(){
+            this.currentIndex = (this.currentIndex + 1) % (this.quotes.length);
+        },
+        random(){
+            this.currentIndex = Math.floor(Math.random() * this.quotes.length)
+        },
+        shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+    },
+    mounted() {
+        this.random();
+        this.shuffleArray(this.quotes);
+    },
+    template: `<div>
+    <div class="pageTile">
+    <h1 class="banner">Quotes</h1>
+</div>
+<div class="pageTile">
+    <div class="card">
+        Here are some quotes and poems that I have found helpful or insightful.<br><br>
+        <figure class="quote">
+        <blockquote>{{quotes[currentIndex].quote}}</blockquote>
+        <cite>{{quotes[currentIndex].author}}</cite>
+    </figure>
+        <div style="display: flex; flex-direction: row;"><button @click="decrement" class="styledButton">Previous quote</button><button @click="random" class="styledButton">Random quote</button><button @click="increment" class="styledButton">Next quote</button></div>
+    </div>
+</div>
+    </div>`
+});

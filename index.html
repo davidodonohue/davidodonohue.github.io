@@ -11,50 +11,110 @@
         <link rel="stylesheet" href="style.css">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
-        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
         <script src="https://kit.fontawesome.com/02e9cf65f2.js"></script>
         <script src="./components/navbar.js"></script>
+        <script src="./components/index.js"></script>
+        <script src="./components/articles.js"></script>
+        <script src="./components/book-reviews.js"></script>
+        <script src="./components/projects.js"></script>
+        <script src="./components/quotes.js"></script>
+        <script src="./components/social.js"></script>
     </head>
     <body>
-        <div id ='app'>
-            <nav-bar></nav-bar>
-            <div class="pageTile">
-                <h1 class="banner">About</h1>
-            </div>
-            <div class="pageTile">
-                <div class="card">
-                    I am a father, a software engineer, and a registered psychologist
-                    with interests in weight lifting, ethical philosophy, willpower, mental health, positive psychology, mindfulness, distress tolerance, computer science,
-                    and mathematics. I enjoy learning, reflecting, solving complex problems, building relationships,
-                    and helping others to develop. <br><br>
+        <div id ='app' >
+            <img v-for="(img, index) in backgroundImages" class="background" :style="getBackgroundOpacity(index)" :src="img" /> 
+                <div class="navbar">
+                    <router-link to="/">Home</router-link>
+                    <router-link to="/articles">Articles</router-link>
+                    <router-link to="/book-reviews">Book Reviews</router-link>
+                    <router-link to="/projects">Projects</router-link>
+                    <router-link to="/quotes">Quotes</router-link>
+                    <a href="https://www.youtube.com/channel/UCalf_ITbJtXeo3mWtMMVRkQ">YouTube</a>
+                    <router-link to="/social">Social</router-link>
+                </div>
+                <transition name="component-fade" mode="out-in">
+                    <router-view></router-view>
+                </transition>
+                <div></div>
 
-                </div>
-            </div>
-            <div class="pageTile">
-                <div class="card">
-                    <a href="resumes/ODonohue.pdf" class="styledButton">Resume</a><a href="assets/boyapati.pdf" class="styledButton">Boyapati Computer Science and Mathematics Prize for First Year</a>
-                    <a href="assets/commendation.pdf" class="styledButton">Deputy Dean (Education) Commendation</a>
-                    <h3>Teaching Evaluations</h3>
-                    <a href="evaluations/Sem1-2018-COMP1100.pdf" class="styledButton">Semester 1, COMP1100, 2018</a>
-                    <a href="evaluations/Sem-1-2018-COMP1130.pdf" class="styledButton">Semester 1, COMP1130, 2018</a>
-                    <a href="evaluations/Sem-2-2018-COMP1100.pdf" class="styledButton">Semester 2 2018</a>
-                    <a href="evaluations/Sem-1-2019.pdf" class="styledButton">Semester 1 2019</a>
-                </div>
-            </div>
         </div>
     </body>
 </html>
 
 <script>
 
-app = new Vue({
-    el: '#app',
+const routes = [
+   
+    { path: '/articles', component: Articles },
+    { path: '/', component: Index },
+    //{ path: '/articles/:article', component: Article },
+    { path: '/book-reviews', component: BookReviews },
+    //{ path: '/book-reviews/:book', component: BookReview },
+    { path: '/projects', component: Projects },
+    { path: '/quotes', component: Quotes },
+    { path: '/social', component: Social },
+    //{ path: '/*', component: Invalid },
+]
+
+const router = new VueRouter({
+  routes
 })
+
+app = new Vue({
+    router,
+    data(){
+        return {
+            backgroundImageIndex: null,
+            backgroundImages: [
+                "./assets/me/thai.jpg",
+                "./assets/me/kids.jpg",
+                "./assets/me/daycare.jpg",
+                "./assets/me/dinner.jpg",
+                "./assets/me/lowes.jpg",
+                "./assets/me/forest.jpg",
+                "./assets/me/cafe.jpg",
+            ]
+        }
+    },
+    methods: {
+        randomBackground(){
+            const old = this.backgroundImageIndex
+            var next = Math.floor(Math.random() * this.backgroundImages.length - 1);
+            if (next >= old){
+                next += 1;
+            }
+            this.backgroundImageIndex = next;
+        },
+        nextBackground(){
+            this.backgroundImageIndex = (this.backgroundImageIndex + 1) % this.backgroundImages.length;
+        },
+        getBackgroundOpacity(index){
+            if (index === this.backgroundImageIndex){
+                return {opacity: 1};
+            } else {
+                return {opacity: 0};
+            }
+        }
+    },
+    watch:{
+        $route (to, from){
+            this.randomBackground()
+        }
+    },
+    computed: {
+        backgroundImage(){
+            return "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('" + this.backgroundImages[this.backgroundImageIndex] + "')";
+        }
+    },
+    mounted() {
+        this.randomBackground();
+    }
+}).$mount("#app");
 
 </script>
 
 <style>
-    #app{
-        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/me/thai.jpg");
-    }
+
 </style>
