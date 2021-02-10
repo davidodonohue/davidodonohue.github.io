@@ -109,7 +109,7 @@ Yours is the Earth and everything that’s in it,
         this.random();
         this.shuffleArray(this.quotes);
     },
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">Quotes</h1>
 </div>

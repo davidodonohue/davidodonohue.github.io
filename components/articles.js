@@ -1,5 +1,5 @@
 const Articles = Vue.component('articles', {
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">Articles</h1>
 </div>

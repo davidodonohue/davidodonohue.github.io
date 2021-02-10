@@ -12,7 +12,7 @@ const Social = Vue.component('social', {
             }  
         }
     },
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">Social</h1>
 </div>

@@ -1,5 +1,5 @@
 const Projects = Vue.component('projects', {
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">Projects</h1>
 </div>

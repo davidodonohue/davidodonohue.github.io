@@ -1,5 +1,5 @@
 const BookReviews = Vue.component('book-reviews', {
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">Book Reviews</h1>
 </div>

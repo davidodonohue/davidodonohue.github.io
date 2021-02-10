@@ -18,6 +18,11 @@ a {
 .idleable{
     background-color: #28a7452e!important;
 }
+
+.warning{
+  background-color: tomato!important;
+}
+
 /* Tooltip container */
 .tooltip {
     position: relative;

@@ -1,5 +1,5 @@
 const Index = Vue.component('index', {
-    template: `<div>
+    template: `<div class="page">
     <div class="pageTile">
     <h1 class="banner">About</h1>
 </div>
