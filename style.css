@@ -35,6 +35,7 @@
     z-index: -1;
     object-fit: cover;
     transition: opacity 1s ease;
+    object-position: 50% 0;
 }
 
 .card {
