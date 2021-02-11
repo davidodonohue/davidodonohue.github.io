@@ -24,7 +24,9 @@
     </head>
     <body>
         <div id ='app' >
-            <img v-for="(img, index) in backgroundImages" class="background" :style="getBackgroundOpacity(index)" :src="img" /> 
+            <img class="background" :style="{opacity: (visibleIndex === 0 ? 1 : 0)}" :src="'assets/me/' + images[0] + '.jpg'" />
+            <img class="background" :style="{opacity: (visibleIndex === 1 ? 1 : 0)}" :src="'assets/me/' + images[1] + '.jpg'" />
+            <img class="background" :style="{opacity: (visibleIndex === 2 ? 1 : 0)}" :src="'assets/me/' + images[2] + '.jpg'" />
                 <div class="navbar">
                     <router-link to="/">Home</router-link>
                     <router-link to="/articles">Articles</router-link>
@@ -66,50 +68,59 @@ app = new Vue({
     router,
     data(){
         return {
-            backgroundImageIndex: null,
-            backgroundImages: [
-                "./assets/me/thai.jpg",
-                "./assets/me/kids.jpg",
-                "./assets/me/daycare.jpg",
-                "./assets/me/dinner.jpg",
-                "./assets/me/lowes.jpg",
-                "./assets/me/forest.jpg",
-                "./assets/me/cafe.jpg",
-            ]
+            images: [null, null, null],
+            imageNum: 26,
+            // visibleIndex is appearing, visibleIndex + 1 is invisible and shuffled, visibleIndex +2 is disappearing
+            visibleIndex: 0,
         }
     },
     methods: {
-        randomBackground(){
-            const old = this.backgroundImageIndex
-            var next = Math.floor(Math.random() * (this.backgroundImages.length - 1));
-            if (next >= old){
+        shuffleBackground(){
+            this.visibleIndex = (this.visibleIndex + 1) % 3;
+            var dontUse = [];
+            var next = Math.floor(Math.random() * (this.imageNum - 3));
+            dontUse.push(this.images[this.visibleIndex]);
+            dontUse.push(this.images[(this.visibleIndex + 2) % 3]);
+            dontUse.push(this.images[(this.visibleIndex + 1) % 3]);
+            dontUse.sort(function(a, b) {
+                return a - b;
+            });
+            if (next >= dontUse[0]){
                 next += 1;
             }
-            this.backgroundImageIndex = next;
-        },
-        nextBackground(){
-            this.backgroundImageIndex = (this.backgroundImageIndex + 1) % this.backgroundImages.length;
-        },
-        getBackgroundOpacity(index){
-            if (index === this.backgroundImageIndex){
-                return {opacity: 1};
-            } else {
-                return {opacity: 0};
+            if (next >= dontUse[1]){
+                next += 1;
             }
-        }
+            if (next >= dontUse[2]){
+                next += 1;
+            }
+            this.images.splice((this.visibleIndex + 1) % 3, 1, next);
+        },
     },
     watch:{
         $route (to, from){
-            this.randomBackground()
+            this.shuffleBackground()
         }
     },
-    computed: {
-        backgroundImage(){
-            return "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('" + this.backgroundImages[this.backgroundImageIndex] + "')";
-        }
-    },
+    // computed: {
+    //     backgroundImage(){
+    //         return "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('" + this.backgroundImages[this.backgroundImageIndex] + "')";
+    //     }
+    // },
     mounted() {
-        this.randomBackground();
+        var first = Math.floor(Math.random() * this.imageNum);
+        var second = Math.floor(Math.random() * (this.imageNum - 1));
+        var third = Math.floor(Math.random() * (this.imageNum - 2));
+        if (second >= first) {
+            first += 1;
+        }
+        if (third >= first){
+            third += 1;
+        }
+        if (third >= second){
+            third += 1;
+        }
+        this.images = [first, second, third];
     }
 }).$mount("#app");
 

@@ -25,7 +25,7 @@ const Quotes = Vue.component('quotes', {
 {quote: "Look well into thyself; there is a source of strength which will always spring up if thou wilt always look.", author: "Marcus Aurelius" },
 {quote: "Here is a rule to remember in future, when anything tempts you to feel bitter: not 'This is misfortune,' but 'To bear this worthily is good fortune.'", author: "Marcus Aurelius" },
 {quote: "Receive without conceit, release without struggle.", author: "Marcus Aurelius" },
-{quote: "As fire tempers gold, so does adversity temper strong men.", author: "Seneca" },
+{quote: "As fire tempers gold, so does adversity temper strong men (and women!).", author: "Seneca" },
 {quote: `Out of the night that covers me,
 Black as the pit from pole to pole,
 I thank whatever gods may be
@@ -51,17 +51,17 @@ If you can trust yourself when all men doubt you,
     But make allowance for their doubting too;   
 If you can wait and not be tired by waiting,
     Or being lied about, don’t deal in lies,
-Or being hated, don’t give way to hating,
-    And yet don’t look too good, nor talk too wise:
+Or being hated, don't give way to hating,
+    And yet don't look too good, nor talk too wise:
 
-If you can dream—and not make dreams your master;   
-    If you can think—and not make thoughts your aim;   
+If you can dream - and not make dreams your master;   
+    If you can think - and not make thoughts your aim;   
 If you can meet with Triumph and Disaster
     And treat those two impostors just the same;   
-If you can bear to hear the truth you’ve spoken
+If you can bear to hear the truth you've spoken
     Twisted by knaves to make a trap for fools,
 Or watch the things you gave your life to, broken,
-    And stoop and build ’em up with worn-out tools:
+    And stoop and build 'em up with worn-out tools:
 
 If you can make one heap of all your winnings
     And risk it on one turn of pitch-and-toss,
@@ -70,16 +70,16 @@ And lose, and start again at your beginnings
 If you can force your heart and nerve and sinew
     To serve your turn long after they are gone,   
 And so hold on when there is nothing in you
-    Except the Will which says to them: ‘Hold on!’
+    Except the Will which says to them: 'Hold on!'
 
 If you can talk with crowds and keep your virtue,   
-    Or walk with Kings—nor lose the common touch,
+    Or walk with Kings-nor lose the common touch,
 If neither foes nor loving friends can hurt you,
     If all men count with you, but none too much;
 If you can fill the unforgiving minute
-    With sixty seconds’ worth of distance run,   
-Yours is the Earth and everything that’s in it,   
-    And—which is more—you’ll be a Man (or Woman!), my son!`, author: "If - Rudyard Kipling" },
+    With sixty seconds' worth of distance run,   
+Yours is the Earth and everything that's in it,   
+    And - which is more - you'll be a Man (or Woman!), my son!`, author: "If - Rudyard Kipling" },
             ],
             currentIndex: 0
         }
