@@ -4,7 +4,7 @@ const Articles = Vue.component('articles', {
     <h1 class="banner">Articles</h1>
 </div>
 <div class="pageTile">
-        <a href="virtue.html" class="styledButton">Virtue</a>
+
 </div>
     </div>`
 });
