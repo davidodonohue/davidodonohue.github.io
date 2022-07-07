@@ -10,7 +10,7 @@
         <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
-        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="vue.min.js"></script>
         <script src="./components/SavedFood.js"></script>
         <script src="./components/MixFood.js"></script>
     </head>
@@ -329,7 +329,8 @@ app = new Vue({
                 if (n === ""){
                     this.filteredList = this.savedFood;
                 } else {
-                    this.filteredList = this.savedFood.filter(obj => obj.name.includes(n));
+                    var searchTerm = n.toLowerCase();
+                    this.filteredList = this.savedFood.filter(obj => obj.name.toLowerCase().includes(searchTerm));
                 }
             }
         }
