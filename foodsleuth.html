@@ -200,10 +200,10 @@ app = new Vue({
         },
         computed: {
             proteinPercent: function() {
-                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.proteinPer100g * 400 / (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4)) : null;
+                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.proteinPer100g * 400 / (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 9)) : null;
             },
             caloriesPer100g: function() {
-                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 4) : null;
+                return (this.inputData.carbsPer100g && this.inputData.proteinPer100g && this.inputData.fatPer100g) ? (this.inputData.carbsPer100g * 4 + this.inputData.proteinPer100g * 4 + this.inputData.fatPer100g * 9) : null;
             },
             costPerProtein: function() {
                 if (this.inputData.netCost && this.inputData.netGrams){
