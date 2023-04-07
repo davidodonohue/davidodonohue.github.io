@@ -26,6 +26,7 @@ const SavedFood = Vue.component('saved-food', {
 <span v-if="data.costPerProtein">{{'$' + parseFloat(data.costPerProtein).toFixed(2)}} per 100g of protein</br></span>
 <span v-if="data.proteinPerServe">{{parseFloat(data.proteinPerServe).toFixed(2)}} grams of protein per serve</br></span>
 <span v-if="data.caloriesPerServe">{{Math.round(data.caloriesPerServe)}} calories per serve</br></span>
+<span v-if="data.caloriesPer100g">{{Math.round(data.caloriesPer100g)}} calories per 100g</br></span>
 <span v-if="data.serveGrams">{{Math.round(data.serveGrams)}} grams per serve</br></span>
 <button @click="remove" class='remove'><i class="fas fa-ban"></i> Remove</button>
 <button v-if="data.editEnabled" @click="edit" class="edit"><i class="fas fa-edit"></i> Edit</button><br>
