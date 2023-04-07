@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const timezoneOffset = currentDate.getTimezoneOffset() * 60000;
   const localDate = new Date(currentDate - timezoneOffset);
   dateInput.valueAsDate = localDate;
+  
 
   let weightData = (JSON.parse(localStorage.getItem('weightData')) || []).map((dataPoint) => ({
     x: new Date(dataPoint.x).getTime(),
@@ -46,6 +47,9 @@ const chart = new ApexCharts(document.querySelector('#weightChart'), {
     },
     yaxis: {
       min: 0,
+      labels: {
+        formatter: yAxisFormatter
+      },
     },
     dataLabels: {
       enabled: false,
@@ -63,7 +67,10 @@ const chart = new ApexCharts(document.querySelector('#weightChart'), {
 const storedGraphLength = localStorage.getItem('graphLength');
 projectionLengthSelect.value = storedGraphLength ? storedGraphLength : "60";
 
-  
+function yAxisFormatter(val) {
+  const roundedVal = Math.round(val * 10) / 10;
+  return parseFloat(roundedVal).toFixed(1);
+}
   
   chart.render();
     // Update the Y-axis min and max values and show the projected data after rendering the chart
@@ -135,6 +142,9 @@ clearDataButton.addEventListener('click', () => {
       yaxis: {
         min: minY,
         max: maxY,
+        labels: {
+          formatter: yAxisFormatter,
+        },
       },
     });
   }
