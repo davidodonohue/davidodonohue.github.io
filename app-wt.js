@@ -55,6 +55,11 @@ const chart = new ApexCharts(document.querySelector('#weightChart'), {
     // Set the anchor date from local storage or use the current date
     const storedAnchorDate = localStorage.getItem('anchorDate');
     anchorDateInput.value = storedAnchorDate ? storedAnchorDate : new Date().toISOString().slice(0, 10);  
+
+    // Set the graph length from local storage or use the default value (60 days)
+const storedGraphLength = localStorage.getItem('graphLength');
+projectionLengthSelect.value = storedGraphLength ? storedGraphLength : "60";
+
   
   
   chart.render();
@@ -192,6 +197,9 @@ clearDataButton.addEventListener('click', () => {
 
     // Update the projection when the graph length changes
     calculateProjectedWeight();
+
+        // Store the selected graph length in local storage
+        localStorage.setItem('graphLength', projectionLengthSelect.value);
   });
 
   // Update the projection when the anchor date changes
