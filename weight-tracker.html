@@ -20,21 +20,12 @@
     <div class="projection-container">
         <label for="anchorDate">Anchor Date:</label>
         <input type="date" id="anchorDate" value="">
-        <label for="percentageChange">Percentage Change per Week:</label>
-        <select id="percentageChange">
-            <option value="-0.01">-1%</option>
-            <option value="-0.005">-0.5%</option>
-            <option value="0" selected>0%</option>
-            <option value="0.005">+0.5%</option>
-            <option value="0.01">+1%</option>
-        </select>
-        <label for="projectionLength">Projection Length:</label>
+        <label for="graphLength">Graph Length:</label>
         <select id="projectionLength">
-            <option value="7">7 Days</option>
-            <option value="30" selected>30 Days</option>
+            <option value="14">14 Days</option>
+            <option value="60" selected>60 Days</option>
             <option value="180">6 Months</option>
         </select>
-        <button id="updateProjection">Update Projection</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.33.0"></script>
     <script src="app-wt.js"></script>
