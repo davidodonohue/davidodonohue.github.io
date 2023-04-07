@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const projectionLengthSelect = document.getElementById('projectionLength');
 
   // Set the current date as the default value for date input
-  dateInput.valueAsDate = new Date();
+  const currentDate = new Date();
+  const timezoneOffset = currentDate.getTimezoneOffset() * 60000;
+  const localDate = new Date(currentDate - timezoneOffset);
+  dateInput.valueAsDate = localDate;
 
   let weightData = (JSON.parse(localStorage.getItem('weightData')) || []).map((dataPoint) => ({
     x: new Date(dataPoint.x).getTime(),
