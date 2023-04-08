@@ -27,6 +27,9 @@ const chart = new ApexCharts(document.querySelector('#weightChart'), {
       zoom: {
         enabled: false,
       },
+      events: {
+        dataPointSelection: handleDataPointClick,
+      },
     },
     series: [
       { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
@@ -71,56 +74,111 @@ function yAxisFormatter(val) {
   const roundedVal = Math.round(val * 10) / 10;
   return parseFloat(roundedVal).toFixed(1);
 }
+
+let currentDataPointIndex;
+
+function handleDataPointClick(event, chartContext, config) {
+  const dataPointIndex = config.dataPointIndex;
+  const seriesIndex = config.seriesIndex;
+
+  if (seriesIndex !== 0) {
+    return;
+  }
+
+  currentDataPointIndex = dataPointIndex;
+  const selectedDataPoint = weightData[dataPointIndex];
+
+  document.getElementById('editWeight').value = selectedDataPoint.y;
+  document.getElementById('editModal').style.display = 'block';
+}
+
+document.getElementById('saveEdit').addEventListener('click', () => {
+  const newWeight = parseFloat(document.getElementById('editWeight').value);
+  weightData[currentDataPointIndex].y = newWeight;
+
+  chart.updateSeries([{ name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) }]);
+  localStorage.setItem('weightData', JSON.stringify(weightData));
+
+  document.getElementById('editModal').style.display = 'none';
+});
+
+document.getElementById('deleteDataPoint').addEventListener('click', () => {
+  weightData.splice(currentDataPointIndex, 1);
+
+  chart.updateSeries([{ name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) }]);
+  localStorage.setItem('weightData', JSON.stringify(weightData));
+
+  document.getElementById('editModal').style.display = 'none';
+});
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('editModal').style.display = 'none';
+});
+
+
+
+
+function updateChartData() {
+  chart.updateSeries([
+    { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+    { name: '-1% Projected Weight', data: chart.w.globals.series[1].data },
+    { name: '-0.5% Projected Weight', data: chart.w.globals.series[2].data },
+    { name: '+0.5% Projected Weight', data: chart.w.globals.series[3].data },
+    { name: '+1% Projected Weight', data: chart.w.globals.series[4].data },
+  ]);
+
+  updateYAxisMinMax();
+}
   
   chart.render();
     // Update the Y-axis min and max values and show the projected data after rendering the chart
     updateYAxisMinMax();
     calculateProjectedWeight();
 
-  addDataButton.addEventListener('click', () => {
-    const weight = parseFloat(weightInput.value);
-    const date = dateInput.value;
-  
-    if (!isNaN(weight) && date) {
-      const timestamp = new Date(date).getTime();
-  
-      // Check if the date is already in the dataset
-      if (weightData.some((dataPoint) => dataPoint.x === timestamp)) {
-        alert('A data point with the same date already exists.');
-        return;
+    addDataButton.addEventListener('click', () => {
+      const weight = parseFloat(weightInput.value);
+      const date = dateInput.value;
+    
+      if (!isNaN(weight) && date) {
+        const timestamp = new Date(date).getTime();
+    
+        // Check if the date is already in the dataset
+        if (weightData.some((dataPoint) => dataPoint.x === timestamp)) {
+          alert('A data point with the same date already exists.');
+          return;
+        }
+    
+        const newDataPoint = { x: timestamp, y: weight };
+        weightData.push(newDataPoint);
+    
+        // Update the chart options with new series data
+        chart.updateOptions({
+          series: [
+            { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+            { name: 'Projected Weight', data: chart.w.globals.series[1].data },
+          ],
+        });
+        updateYAxisMinMax();
+    
+        localStorage.setItem('weightData', JSON.stringify(weightData));
+    
+        // Clear the input fields after adding data
+        weightInput.value = '';
+        dateInput.valueAsDate = new Date();
       }
-  
-      const newDataPoint = { x: timestamp, y: weight };
-      weightData.push(newDataPoint);
-  
-      // Update the chart options with new series data
-      chart.updateOptions({
-        series: [
-          { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
-          { name: 'Projected Weight', data: chart.w.globals.series[1].data },
-        ],
-      });
-      updateYAxisMinMax();
-  
-      localStorage.setItem('weightData', JSON.stringify(weightData));
-    }
-  });
+    });
+    
+    
   
   
   
   
   
 
-  // Clear data from the chart and local storage
-clearDataButton.addEventListener('click', () => {
+  clearDataButton.addEventListener('click', () => {
     weightData = [];
   
-    chart.updateSeries([
-      { name: 'Weight', data: [] },
-      { name: 'Projected Weight', data: chart.w.globals.series[1].data },
-    ]);
-
-    updateYAxisMinMax();
+    updateChartData();
   
     localStorage.removeItem('weightData');
   });
