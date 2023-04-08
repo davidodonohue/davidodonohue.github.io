@@ -46,7 +46,7 @@ async function applyOCR(imageData) {
   const { data } = await Tesseract.recognize(imageData, 'eng', {
     workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/worker.min.js',
     langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/lang-data',
-    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5-core/tesseract-core.wasm.js',
+    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract-core.wasm.js',
   });
   return data.text;
 }
