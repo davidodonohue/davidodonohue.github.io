@@ -17,11 +17,17 @@ function applyEdgeDetection(imageData) {
   jsfeat.imgproc.grayscale(imageData.data, imageData.width, imageData.height, grayImageData);
   jsfeat.imgproc.gaussian_blur(grayImageData, grayImageData, 3);
   jsfeat.imgproc.canny(grayImageData, grayImageData, 20, 80);
-  
-  const clampedArray = new Uint8ClampedArray(grayImageData.data.buffer);
-  const edgeDetectedImageData = new ImageData(clampedArray, grayImageData.cols, grayImageData.rows);
+
+  const rgbaArray = new Uint8ClampedArray(imageData.width * imageData.height * 4);
+  for (let i = 0, j = 0; i < grayImageData.data.length; i++, j += 4) {
+    rgbaArray[j] = rgbaArray[j + 1] = rgbaArray[j + 2] = grayImageData.data[i];
+    rgbaArray[j + 3] = 255;
+  }
+
+  const edgeDetectedImageData = new ImageData(rgbaArray, imageData.width, imageData.height);
   return edgeDetectedImageData;
 }
+
 
   
   // Function to apply OCR
