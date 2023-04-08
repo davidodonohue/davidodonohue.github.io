@@ -41,11 +41,16 @@ function applyEdgeDetection(imageData) {
 
 
   
-  // Function to apply OCR
-  async function applyOCR(imageData) {
-    const { data } = await Tesseract.recognize(imageData);
-    return data.text;
-  }
+// Function to apply OCR
+async function applyOCR(imageData) {
+  const { data } = await Tesseract.recognize(imageData, 'eng', {
+    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.2.2/dist/worker.min.js',
+    langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.2.2/lang-data',
+    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@2.2.2-core/tesseract-core.wasm.js',
+  });
+  return data.text;
+}
+
 
   function extractNutritionInfo(ocrText) {
     const regexMapping = {
