@@ -1,42 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weight Tracker</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calorie Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/canny-js@0.1.0/dist/canny.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.0.0/dist/tesseract.min.js"></script>
+
 </head>
 <body>
-    <h1>Weight Tracker</h1>
-    <div class="input-container">
-        <input type="number" id="weight" placeholder="Weight (kg)">
-        <input type="date" id="date" value="">
-        <button id="addData">Add Data</button>
-        <button id="clearData">Clear Data</button>
-    </div>
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-          <label for="editWeight">Edit weight:</label>
-          <input type="number" id="editWeight" step="0.1">
-          <button id="saveEdit">Save</button>
-          <button id="deleteDataPoint">Delete</button>
-          <button id="closeModal">Close</button>
-        </div>
-      </div>      
-    <div class="chart-container">
-        <div id="weightChart"></div>
-    </div>
-    <div class="projection-container">
-        <label for="anchorDate">Anchor Date:</label>
-        <input type="date" id="anchorDate" value="">
-        <label for="graphLength">Graph Length:</label>
-        <select id="projectionLength">
-            <option value="14">14 Days</option>
-            <option value="60" selected>60 Days</option>
-            <option value="180">6 Months</option>
-        </select>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.33.0"></script>
-    <script src="app.js"></script>
+  <div class="container">
+    <h1>Calorie Tracker</h1>
+    <button id="scanButton">Scan Nutrition Label</button>
+
+    <form id="nutritionForm">
+      <label for="foodName">Food Name:</label>
+      <input type="text" id="foodName" name="foodName" required>
+      
+      <label for="servingSize">Serving Size (g):</label>
+      <input type="number" id="servingSize" name="servingSize" required>
+
+      <label for="carbs">Carbs per 100g (g):</label>
+      <input type="number" id="carbs" name="carbs" required>
+
+      <label for="protein">Protein per 100g (g):</label>
+      <input type="number" id="protein" name="protein" required>
+
+      <label for="fat">Fat per 100g (g):</label>
+      <input type="number" id="fat" name="fat" required>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
