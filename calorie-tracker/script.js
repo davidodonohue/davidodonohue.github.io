@@ -11,15 +11,18 @@ function captureImage(video) {
     return ctx.getImageData(0, 0, canvas.width, canvas.height);
   }
   
+// Function to apply edge detection
 function applyEdgeDetection(imageData) {
   const grayImageData = new jsfeat.matrix_t(imageData.width, imageData.height, jsfeat.U8_t | jsfeat.C1_t);
   jsfeat.imgproc.grayscale(imageData.data, imageData.width, imageData.height, grayImageData);
   jsfeat.imgproc.gaussian_blur(grayImageData, grayImageData, 3);
   jsfeat.imgproc.canny(grayImageData, grayImageData, 20, 80);
   
-  const edgeDetectedImageData = new ImageData(grayImageData.data, grayImageData.cols, grayImageData.rows);
+  const clampedArray = new Uint8ClampedArray(grayImageData.data.buffer);
+  const edgeDetectedImageData = new ImageData(clampedArray, grayImageData.cols, grayImageData.rows);
   return edgeDetectedImageData;
 }
+
   
   // Function to apply OCR
   async function applyOCR(imageData) {
