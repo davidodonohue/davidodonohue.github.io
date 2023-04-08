@@ -10,6 +10,17 @@ function captureImage(video) {
     ctx.drawImage(video, 0, 0);
     return ctx.getImageData(0, 0, canvas.width, canvas.height);
   }
+
+// Function to display the captured image (for debugging purposes)
+function displayCapturedImage(imageData) {
+  const canvas = document.createElement('canvas');
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  const ctx = canvas.getContext('2d');
+  ctx.putImageData(imageData, 0, 0);
+
+  document.body.appendChild(canvas); // Add the canvas to the DOM for debugging
+}
   
 // Function to apply edge detection
 function applyEdgeDetection(imageData) {
@@ -73,6 +84,8 @@ function applyEdgeDetection(imageData) {
         const imageData = captureImage(video);
         video.pause();
         stream.getTracks()[0].stop();
+          
+        displayCapturedImage(imageData);
   
         // Apply edge detection
         const edgeDetectedImageData = applyEdgeDetection(imageData);
