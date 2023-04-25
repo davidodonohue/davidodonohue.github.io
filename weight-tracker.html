@@ -205,7 +205,10 @@ function updateChartData() {
         chart.updateOptions({
           series: [
             { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
-            { name: 'Projected Weight', data: chart.w.globals.series[1].data },
+            { name: '-1% Projected Weight', data: chart.w.globals.series[1].data },
+            { name: '-0.5% Projected Weight', data: chart.w.globals.series[2].data },
+            { name: '+0.5% Projected Weight', data: chart.w.globals.series[3].data },
+            { name: '+1% Projected Weight', data: chart.w.globals.series[4].data },
           ],
         });
         updateYAxisMinMax();
