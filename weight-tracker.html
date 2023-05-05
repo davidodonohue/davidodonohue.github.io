@@ -43,7 +43,6 @@
         </select>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.33.0"></script>
-    <script src="app-wt.js"></script>
 </body>
 </html>
 
@@ -52,7 +51,7 @@
   const weightInput = document.getElementById('weight');
   const dateInput = document.getElementById('date');
   const addDataButton = document.getElementById('addData');
-  const clearDataButton = document.getElementById('clearData');
+  document.getElementById("clearData").addEventListener("click", clearChartData);
   const anchorDateInput = document.getElementById('anchorDate');
   const projectionLengthSelect = document.getElementById('projectionLength');
 
@@ -223,6 +222,7 @@ function updateChartData() {
         chart.updateOptions({
           series: [
             { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+            { name: 'Exponential Smoothing', data: calculateExponentialSmoothing(weightData) },
             { name: '-1% Projected Weight', data: chart.w.globals.series[1].data },
             { name: '-0.5% Projected Weight', data: chart.w.globals.series[2].data },
             { name: '+0.5% Projected Weight', data: chart.w.globals.series[3].data },
@@ -239,20 +239,7 @@ function updateChartData() {
       }
     });
     
-    
-  
-  
-  
-  
-  
 
-  clearDataButton.addEventListener('click', () => {
-    weightData = [];
-  
-    updateChartData();
-  
-    localStorage.removeItem('weightData');
-  });
 
   function updateYAxisMinMax() {
     const allDataPoints = [
@@ -277,6 +264,20 @@ function updateChartData() {
       },
     });
   }
+
+  function clearChartData() {
+  chart.updateSeries([
+    { name: 'Weight', data: [] },
+    { name: 'Exponential Smoothing', data: [] },
+    { name: '-1% Projected Weight', data: [] },
+    { name: '-0.5% Projected Weight', data: [] },
+    { name: '+0.5% Projected Weight', data: [] },
+    { name: '+1% Projected Weight', data: [] },
+  ]);
+
+  updateYAxisMinMax();
+  localStorage.removeItem('weightData');
+}
   
   
   
@@ -295,7 +296,7 @@ function updateChartData() {
     const anchorDateObj = new Date(anchorDate);
     const anchorTimestamp = anchorDateObj.getTime();
     const pastData = weightData.filter((dataPoint) => new Date(dataPoint.x).getTime() <= anchorTimestamp);
-  const lastSevenDaysData = pastData.slice(Math.max(pastData.length - 7, 0));
+    const lastSevenDaysData = pastData.slice(Math.max(pastData.length - 7, 0));
 
   if (lastSevenDaysData.length === 0) {
     return;
@@ -315,6 +316,7 @@ function updateChartData() {
 
   chart.updateSeries([
     { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+    { name: 'Exponential Smoothing', data: calculateExponentialSmoothing(weightData) },
     { name: '-1% Projected Weight', data: projectedData[0] },
     { name: '-0.5% Projected Weight', data: projectedData[1] },
     { name: '+0.5% Projected Weight', data: projectedData[2] },
