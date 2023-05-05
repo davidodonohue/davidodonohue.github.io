@@ -83,6 +83,7 @@ const chart = new ApexCharts(document.querySelector('#weightChart'), {
     },
     series: [
       { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+      { name: 'Exponential Smoothing', data: [] },
       { name: '-1% Projected Weight', data: [] },
       { name: '-0.5% Projected Weight', data: [] },
       { name: '+0.5% Projected Weight', data: [] },
@@ -165,12 +166,29 @@ document.getElementById('closeModal').addEventListener('click', () => {
   document.getElementById('editModal').style.display = 'none';
 });
 
+function calculateExponentialSmoothing(data) {
+  if (data.length === 0) {
+    return [];
+  }
 
+  const smoothingFactor = 0.3;
+  let smoothedData = [{ x: data[0].x, y: data[0].y }];
+
+  for (let i = 1; i < data.length; i++) {
+    const prevSmoothedData = smoothedData[i - 1].y;
+    const currentData = data[i].y;
+    const smoothedValue = smoothingFactor * currentData + (1 - smoothingFactor) * prevSmoothedData;
+    smoothedData.push({ x: data[i].x, y: smoothedValue });
+  }
+
+  return smoothedData;
+}
 
 
 function updateChartData() {
   chart.updateSeries([
     { name: 'Weight', data: weightData.map((point) => ({ x: point.x, y: point.y })) },
+    { name: 'Exponential Smoothing', data: calculateExponentialSmoothing(weightData) },
     { name: '-1% Projected Weight', data: chart.w.globals.series[1].data },
     { name: '-0.5% Projected Weight', data: chart.w.globals.series[2].data },
     { name: '+0.5% Projected Weight', data: chart.w.globals.series[3].data },
